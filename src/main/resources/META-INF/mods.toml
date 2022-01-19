@@ -7,7 +7,7 @@ version="${file.jarVersion}" #mandatory
 displayName="SoulShards" #mandatory
 logoFile="logo.png" #optional
 credits="" #optional
-authors="CreeperHost" #optional
+authors="CreeperHost, tehnut" #optional
 description='''
 
 '''
@@ -22,6 +22,6 @@ description='''
 [[dependencies.soulshards]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5,1.17)"
+    versionRange="[1.18,1.19)"
     ordering="NONE"
     side="BOTH"
