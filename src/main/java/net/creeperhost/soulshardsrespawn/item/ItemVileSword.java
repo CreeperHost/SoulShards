@@ -2,6 +2,7 @@ package net.creeperhost.soulshardsrespawn.item;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.ISoulWeapon;
+import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +61,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
         @Override
         public Ingredient getRepairIngredient()
         {
-            return null;
+            return Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT);
         }
     }
 }

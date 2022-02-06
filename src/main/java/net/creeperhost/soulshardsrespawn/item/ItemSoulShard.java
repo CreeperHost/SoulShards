@@ -1,6 +1,7 @@
 package net.creeperhost.soulshardsrespawn.item;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
+import net.creeperhost.soulshardsrespawn.api.IBarHelper;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
@@ -27,10 +28,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemSoulShard extends Item implements ISoulShard
+public class ItemSoulShard extends Item implements ISoulShard, IBarHelper
 {
     public ItemSoulShard()
     {
@@ -62,7 +64,7 @@ public class ItemSoulShard extends Item implements ISoulShard
 
             try
             {
-                ResourceLocation entityId = mobSpawner.getSpawner().getSpawnerEntity().getType().getRegistryName();
+                ResourceLocation entityId = mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType().getRegistryName();//mobSpawner.getSpawner().getSpawnerEntity().getType().getRegistryName();
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
@@ -138,28 +140,54 @@ public class ItemSoulShard extends Item implements ISoulShard
         return binding != null && binding.getKills() >= Tier.maxKills;
     }
 
-
-    @Override
-    public boolean isBarVisible(ItemStack itemStack)
-    {
-        Binding binding = getBinding(itemStack);
-        return SoulShards.CONFIG.getClient().displayDurabilityBar() && binding != null && binding.getKills() < Tier.maxKills;
-    }
-
-
-    @Override
-    public int getBarWidth(ItemStack stack)
-    {
-        Binding binding = getBinding(stack);
-        if (binding == null) return 1;
-
-        return 1 - (binding.getKills() / Tier.maxKills);
-    }
+//    @Override
+//    public boolean isBarVisible(ItemStack itemStack)
+//    {
+//        Binding binding = getBinding(itemStack);
+//        return SoulShards.CONFIG.getClient().displayDurabilityBar() && binding != null && binding.getKills() < Tier.maxKills;
+//    }
+//
+//    @Override
+//    public int getBarWidth(ItemStack stack)
+//    {
+//        Binding binding = getBinding(stack);
+//        if (binding == null) return 1;
+//
+//        return 1 - (binding.getKills() / Tier.maxKills);
+//    }
 
     @Override
     public int getItemStackLimit(ItemStack stack)
     {
         return getBinding(stack) == null ? 64 : 1;
+    }
+
+    @Override
+    public boolean isBarVisible(@Nonnull ItemStack itemStack)
+    {
+        Binding binding = getBinding(itemStack);
+        return SoulShards.CONFIG.getClient().displayDurabilityBar() && binding != null && binding.getKills() < Tier.maxKills;
+    }
+
+    @Override
+    public float getWidthForBar(ItemStack stack)
+    {
+        Binding binding = getBinding(stack);
+        if (binding == null) return 1;
+
+        return 1F - ((float) binding.getKills() / (float) Tier.maxKills);
+    }
+
+    @Override
+    public int getBarWidth(@Nonnull ItemStack stack)
+    {
+        return this.getScaledBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(@Nonnull ItemStack stack)
+    {
+        return this.getColorForBar(stack);
     }
 
     @Nullable
@@ -172,7 +200,6 @@ public class ItemSoulShard extends Item implements ISoulShard
     public void updateBinding(ItemStack stack, Binding binding)
     {
         if (!stack.hasTag()) stack.setTag(new CompoundTag());
-
         stack.getTag().put("binding", binding.serializeNBT());
     }
 }
