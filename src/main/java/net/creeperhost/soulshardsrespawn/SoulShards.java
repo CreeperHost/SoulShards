@@ -7,6 +7,8 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,11 +43,33 @@ public class SoulShards
     public SoulShards()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     }
 
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event)
     {
         SoulShardsClient.initClient();
+    }
+
+    public void setup(FMLClientSetupEvent event)
+    {
+        event.enqueueWork(() ->
+        {
+            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "bound"), (stack, level, living, id) ->
+            {
+                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
+                return soulShard.getBinding(stack) != null ? 1.0F : 0.0F;
+            });
+
+            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "tier"), (stack, level, living, id) ->
+            {
+                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
+                Binding binding = soulShard.getBinding(stack);
+                if(binding == null) return 0F;
+
+                return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
+            });
+        });
     }
 }

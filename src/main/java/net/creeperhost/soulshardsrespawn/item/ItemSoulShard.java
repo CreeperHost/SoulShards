@@ -140,22 +140,6 @@ public class ItemSoulShard extends Item implements ISoulShard, IBarHelper
         return binding != null && binding.getKills() >= Tier.maxKills;
     }
 
-//    @Override
-//    public boolean isBarVisible(ItemStack itemStack)
-//    {
-//        Binding binding = getBinding(itemStack);
-//        return SoulShards.CONFIG.getClient().displayDurabilityBar() && binding != null && binding.getKills() < Tier.maxKills;
-//    }
-//
-//    @Override
-//    public int getBarWidth(ItemStack stack)
-//    {
-//        Binding binding = getBinding(stack);
-//        if (binding == null) return 1;
-//
-//        return 1 - (binding.getKills() / Tier.maxKills);
-//    }
-
     @Override
     public int getItemStackLimit(ItemStack stack)
     {
