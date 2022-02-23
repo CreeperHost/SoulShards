@@ -12,8 +12,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.1'
-group = 'net.creeperhost.stevescarts' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = '1.0.2'
+group = 'net.creeperhost.soulshards' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'soulshards'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
