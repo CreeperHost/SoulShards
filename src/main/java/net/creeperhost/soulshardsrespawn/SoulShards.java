@@ -43,17 +43,12 @@ public class SoulShards
     public SoulShards()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     }
 
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event)
     {
         SoulShardsClient.initClient();
-    }
-
-    public void setup(FMLClientSetupEvent event)
-    {
         event.enqueueWork(() ->
         {
             ItemProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "bound"), (stack, level, living, id) ->
