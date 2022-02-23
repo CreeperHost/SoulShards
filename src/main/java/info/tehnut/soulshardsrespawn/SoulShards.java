@@ -7,8 +7,11 @@ import info.tehnut.soulshardsrespawn.core.data.Binding;
 import info.tehnut.soulshardsrespawn.core.data.Tier;
 import info.tehnut.soulshardsrespawn.core.util.JsonUtil;
 import info.tehnut.soulshardsrespawn.item.ItemSoulShard;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -44,5 +47,22 @@ public class SoulShards {
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event) {
         SoulShardsClient.initClient();
+        event.enqueueWork(() ->
+        {
+            ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "bound"), (stack, level, living) ->
+            {
+                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
+                return soulShard.getBinding(stack) != null ? 1.0F : 0.0F;
+            });
+
+            ItemModelsProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "tier"), (stack, level, living) ->
+            {
+                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
+                Binding binding = soulShard.getBinding(stack);
+                if(binding == null) return 0F;
+
+                return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
+            });
+        });
     }
 }
