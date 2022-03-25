@@ -47,17 +47,6 @@ public class ConfigSoulShards
 
     public static void handleMultiblock()
     {
-        // FIXME parsing is currently broke
-        //        File multiblockFile = new File(FabricLoader.INSTANCE.getConfigDirectory(), SoulShards.MODID + "/multiblock.json");
-        //        if (!multiblockFile.exists()) {
-        //            try {
-        //                FileUtils.copyInputStreamToFile(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json"), multiblockFile);
-        //            } catch (Exception e) {
-        //                e.printStackTrace();
-        //            }
-        //        }
-        //
-        //        multiblock = JsonUtil.fromJson(TypeToken.get(MultiblockPattern.class), multiblockFile);
         if (multiblock == null) multiblock = MultiblockPattern.DEFAULT;
     }
 
@@ -70,7 +59,6 @@ public class ConfigSoulShards
 
     public static class ConfigBalance
     {
-
         private boolean allowSpawnerAbsorption;
         private boolean allowFakePlayers;
         private int absorptionBonus;
