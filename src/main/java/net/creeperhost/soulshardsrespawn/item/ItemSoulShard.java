@@ -1,7 +1,7 @@
 package net.creeperhost.soulshardsrespawn.item;
 
+import net.creeperhost.polylib.items.helpers.IDamageBarHelper;
 import net.creeperhost.soulshardsrespawn.SoulShards;
-import net.creeperhost.soulshardsrespawn.api.IBarHelper;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemSoulShard extends Item implements ISoulShard, IBarHelper
+public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 {
     public ItemSoulShard()
     {
