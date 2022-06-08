@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion="[41,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 license="https://github.com/CreeperHost/SoulShards/blob/1.18/LICENSE.md"
 [[mods]] #mandatory
 modId="soulshards" #mandatory
@@ -15,20 +15,13 @@ description='''
 [[dependencies.soulshards]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[40,)" #mandatory
+    versionRange="[41,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.soulshards]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18,1.19)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.soulshards]]
-    modId="polylib"
-    mandatory=true
-    versionRange="[1801,)"
+    versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"

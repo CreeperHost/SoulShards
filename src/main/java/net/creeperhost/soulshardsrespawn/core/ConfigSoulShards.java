@@ -3,6 +3,7 @@ package net.creeperhost.soulshardsrespawn.core;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -186,7 +187,7 @@ public class ConfigSoulShards
             Map<String, Boolean> defaults = Maps.newHashMap();
             ForgeRegistries.ENTITIES.getValues().stream().filter(e -> e.getCategory() != MobCategory.MISC).forEach(e ->
             {
-                String entityId = e.getRegistryName().toString();
+                String entityId = Registry.ENTITY_TYPE.getKey(e).toString();
                 defaults.put(entityId, !DEFAULT_DISABLES.contains(entityId));
             });
             return defaults;

@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -88,7 +89,7 @@ public class BlockSoulCage extends BaseEntityBlock
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random)
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random)
     {
         if (state.getValue(POWERED) && !world.hasNeighborSignal(pos))
         {

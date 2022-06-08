@@ -1,6 +1,6 @@
 package net.creeperhost.soulshardsrespawn.item;
 
-import net.creeperhost.polylib.items.helpers.IDamageBarHelper;
+import net.creeperhost.soulshardsrespawn.IDamageBarHelper;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;
@@ -9,9 +9,9 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption())
             {
-                context.getPlayer().sendMessage(new TranslatableComponent("chat.soulshards.absorb_disabled"), null);
+                context.getPlayer().displayClientMessage(Component.translatable("chat.soulshards.absorb_disabled"), false);
                 return InteractionResult.PASS;
             }
 
@@ -64,7 +65,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
             try
             {
-                ResourceLocation entityId = mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType().getRegistryName();//mobSpawner.getSpawner().getSpawnerEntity().getType().getRegistryName();
+                ResourceLocation entityId = Registry.ENTITY_TYPE.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
@@ -78,7 +79,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
                 e.printStackTrace();
             }
         }
-        else if (state.getBlock() == RegistrarSoulShards.SOUL_CAGE)
+        else if (state.getBlock() == RegistrarSoulShards.SOUL_CAGE.get())
         {
             if (binding.getBoundEntity() == null) return InteractionResult.FAIL;
 
@@ -100,9 +101,9 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items)
+    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items)
     {
-        if (!allowdedIn(group)) return;
+        if (!allowedIn(group)) return;
 
         items.add(new ItemStack(this));
         for (IShardTier tier : Tier.INDEXED)
@@ -115,7 +116,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag)
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag)
     {
         Binding binding = getBinding(stack);
         if (binding == null) return;
@@ -124,17 +125,20 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         {
             EntityType<?> entityEntry = ForgeRegistries.ENTITIES.getValue(binding.getBoundEntity());
             if (entityEntry != null)
-                tooltip.add(new TranslatableComponent("tooltip.soulshards.bound", entityEntry.getRegistryName()));
+            {
+                ResourceLocation resourceLocation = Registry.ENTITY_TYPE.getKey(entityEntry);
+                tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation));
+            }
         }
 
-        tooltip.add(new TranslatableComponent("tooltip.soulshards.tier", binding.getTier().getIndex()));
-        tooltip.add(new TranslatableComponent("tooltip.soulshards.kills", binding.getKills()));
+        tooltip.add(Component.translatable("tooltip.soulshards.tier", binding.getTier().getIndex()));
+        tooltip.add(Component.translatable("tooltip.soulshards.kills", binding.getKills()));
         if (flag.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(new TranslatableComponent("tooltip.soulshards.owner", binding.getOwner().toString()));
+            tooltip.add(Component.translatable("tooltip.soulshards.owner", binding.getOwner().toString()));
     }
 
     @Override
-    public boolean isFoil(ItemStack stack)
+    public boolean isFoil(@NotNull ItemStack stack)
     {
         Binding binding = getBinding(stack);
         return binding != null && binding.getKills() >= Tier.maxKills;

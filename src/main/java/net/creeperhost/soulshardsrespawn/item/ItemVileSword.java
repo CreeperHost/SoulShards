@@ -61,7 +61,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
         @Override
         public Ingredient getRepairIngredient()
         {
-            return Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT);
+            return Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT.get());
         }
     }
 }

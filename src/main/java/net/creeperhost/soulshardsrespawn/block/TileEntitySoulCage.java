@@ -39,7 +39,7 @@ public class TileEntitySoulCage extends BlockEntity
 
     public TileEntitySoulCage(BlockPos blockPos, BlockState blockState)
     {
-        super(RegistrarSoulShards.SOUL_CAGE_TE, blockPos, blockState);
+        super(RegistrarSoulShards.SOUL_CAGE_TE.get(), blockPos, blockState);
         this.inventory = new SoulCageInventory()
         {
             @Override
@@ -124,7 +124,7 @@ public class TileEntitySoulCage extends BlockEntity
     private InteractionResultHolder<Binding> canSpawn()
     {
         BlockState state = getBlockState();
-        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE)
+        if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE.get())
             return new InteractionResultHolder<>(InteractionResult.FAIL, null);
 
         ItemStack shardStack = inventory.getStackInSlot(0);

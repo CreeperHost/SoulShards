@@ -8,6 +8,7 @@ import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -41,16 +42,16 @@ public class EventHandler
         if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getEntity() instanceof FakePlayer)
             return;
 
-        if (!SoulShards.CONFIG.getEntityList().isEnabled(event.getEntityLiving().getType().getRegistryName())) return;
+        ResourceLocation resourceLocation = Registry.ENTITY_TYPE.getKey(event.getEntityLiving().getType());
+        if (!SoulShards.CONFIG.getEntityList().isEnabled(resourceLocation)) return;
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !event.getEntityLiving().canChangeDimensions()) return;
 
         if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntityLiving().getPersistentData().getBoolean("cageBorn"))
             return;
 
-        if (event.getSource().getEntity() instanceof Player)
+        if (event.getSource().getEntity() instanceof Player player)
         {
-            Player player = (Player) event.getSource().getEntity();
 
             BindingEvent.GetEntityName getEntityName = new BindingEvent.GetEntityName(event.getEntityLiving());
             MinecraftForge.EVENT_BUS.post(getEntityName);
@@ -79,7 +80,7 @@ public class EventHandler
             ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Base of 1 plus enchantment bonus
-            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER, mainHand);
+            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER.get(), mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, event.getEntityLiving());
 
@@ -113,7 +114,7 @@ public class EventHandler
             event.getWorld().destroyBlock(pos, false);
 
         held.shrink(1);
-        ItemHandlerHelper.giveItemToPlayer(event.getPlayer(), new ItemStack(RegistrarSoulShards.SOUL_SHARD));
+        ItemHandlerHelper.giveItemToPlayer(event.getPlayer(), new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()));
     }
 
     @SubscribeEvent
@@ -130,7 +131,7 @@ public class EventHandler
 
             if (left.getBoundEntity() != null && left.getBoundEntity().equals(right.getBoundEntity()))
             {
-                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD);
+                ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
                 ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
                 event.setOutput(output);
                 event.setCost(left.getTier().getIndex() * 6);

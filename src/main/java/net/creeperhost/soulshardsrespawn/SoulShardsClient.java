@@ -8,6 +8,6 @@ public class SoulShardsClient
 {
     public static void initClient()
     {
-        ItemBlockRenderTypes.setRenderLayer(RegistrarSoulShards.SOUL_CAGE, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(RegistrarSoulShards.SOUL_CAGE.get(), RenderType.cutout());
     }
 }

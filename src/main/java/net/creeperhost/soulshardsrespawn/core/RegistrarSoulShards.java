@@ -15,51 +15,28 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = SoulShards.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-@ObjectHolder(SoulShards.MODID)
 public class RegistrarSoulShards
 {
-    public static final Block SOUL_CAGE = Blocks.AIR;
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SoulShards.MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SoulShards.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, SoulShards.MODID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SoulShards.MODID);
 
-    @ObjectHolder("soul_cage")
-    public static final BlockEntityType<?> SOUL_CAGE_TE = BlockEntityType.BED;
+    public static final RegistryObject<Item> VILE_DUST = ITEMS.register("vile_dust", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> VILE_SWORD = ITEMS.register("vile_sword", () -> new ItemVileSword());
+    public static final RegistryObject<Item> CORRUPTED_ESSENCE = ITEMS.register("corrupted_essence", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> CORRUPTED_INGOT = ITEMS.register("corrupted_ingot", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> SOUL_SHARD = ITEMS.register("soul_shard", () -> new ItemSoulShard());
 
-    public static final Item SOUL_SHARD = Items.AIR;
-    public static final Item VILE_SWORD = Items.AIR;
-    public static final Item CORRUPTED_ESSENCE = Items.AIR;
-    public static final Item CORRUPTED_INGOT = Items.AIR;
-    public static final Item VILE_DUST = Items.AIR;
+    public static final RegistryObject<Block> SOUL_CAGE = BLOCKS.register("soul_cage", () -> new BlockSoulCage());
+    public static final RegistryObject<Item> SOUL_CAGE_ITEM = ITEMS.register("soul_cage", () -> new BlockItem(SOUL_CAGE.get(), new Item.Properties().tab(SoulShards.TAB_SS)));
 
-    public static final Enchantment SOUL_STEALER = Enchantments.INFINITY_ARROWS;
+    public static final RegistryObject<BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE =
+            TILES_ENTITIES.register("soul_cage", () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get()).build(null));
 
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
-    {
-        event.getRegistry().registerAll(new BlockSoulCage().setRegistryName("soul_cage"));
-    }
-
-    @SubscribeEvent
-    public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event)
-    {
-        event.getRegistry().register(BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE).build(null).setRegistryName(SoulShards.MODID, "soul_cage"));
-    }
-
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-        Tier.readTiers();
-
-        event.getRegistry().registerAll(new BlockItem(SOUL_CAGE, new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName(SOUL_CAGE.getRegistryName()), new ItemVileSword().setRegistryName("vile_sword"), new ItemSoulShard().setRegistryName("soul_shard"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_essence"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_ingot"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("vile_dust"));
-    }
-
-    @SubscribeEvent
-    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event)
-    {
-        event.getRegistry().registerAll(new EnchantmentSoulStealer().setRegistryName("soul_stealer"));
-    }
+    public static final RegistryObject<Enchantment> SOUL_STEALER = ENCHANTMENTS.register("soul_stealer", () -> new EnchantmentSoulStealer());
 }
