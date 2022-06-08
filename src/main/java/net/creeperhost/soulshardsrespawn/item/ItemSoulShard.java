@@ -1,6 +1,6 @@
 package net.creeperhost.soulshardsrespawn.item;
 
-import net.creeperhost.soulshardsrespawn.IDamageBarHelper;
+import net.creeperhost.polylib.items.helpers.IDamageBarHelper;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;

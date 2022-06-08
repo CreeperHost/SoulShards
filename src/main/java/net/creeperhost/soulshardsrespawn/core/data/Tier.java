@@ -87,9 +87,7 @@ public class Tier implements IShardTier
     public boolean equals(Object object)
     {
         if (this == object) return true;
-        if (!(object instanceof Tier)) return false;
-
-        Tier tier = (Tier) object;
+        if (!(object instanceof Tier tier)) return false;
 
         return killRequirement == tier.killRequirement;
     }

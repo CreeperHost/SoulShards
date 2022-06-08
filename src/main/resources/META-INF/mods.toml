@@ -25,3 +25,10 @@ description='''
     versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.soulshards]]
+    modId="polylib"
+    mandatory=true
+    versionRange="[1900,)"
+    ordering="NONE"
+    side="BOTH"

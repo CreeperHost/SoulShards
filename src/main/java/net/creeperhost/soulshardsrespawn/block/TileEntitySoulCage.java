@@ -239,7 +239,6 @@ public class TileEntitySoulCage extends BlockEntity
 
     public static class SoulCageInventory extends ItemStackHandler
     {
-
         public SoulCageInventory()
         {
             super(1);
