@@ -45,7 +45,7 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
         IDrawable quartz = iGuiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Blocks.QUARTZ_BLOCK));
         IDrawable glowstone = iGuiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Blocks.GLOWSTONE));
 
-        multiblock = new MultiBlockDrawable(quartz, glowstone, obsidian);
+        multiblock = new MultiBlockDrawable(obsidian, glowstone, quartz);
         arrowRight = iGuiHelper.drawableBuilder(new ResourceLocation("jei", "textures/gui/gui_vanilla.png"), 82, 128, 24, 17).build();
     }
 
