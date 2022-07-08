@@ -98,9 +98,11 @@ dependencies {
 
     // compileOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2:api')
     // runtimeOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
+
+
     compileOnly fg.deobf("mezz.jei:jei-1.19-common-api:${project.jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:${project.jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:${project.jei_version}")
+//    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:${project.jei_version}")
 
 }
 
