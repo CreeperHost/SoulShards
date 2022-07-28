@@ -23,7 +23,7 @@ public class RegistrarSoulShards
 {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SoulShards.MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SoulShards.MODID);
-    public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, SoulShards.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SoulShards.MODID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SoulShards.MODID);
 
     public static final RegistryObject<Item> VILE_DUST = ITEMS.register("vile_dust", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));

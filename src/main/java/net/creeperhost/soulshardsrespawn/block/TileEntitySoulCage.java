@@ -81,7 +81,7 @@ public class TileEntitySoulCage extends BlockEntity
         Binding binding = getBinding();
         if (binding == null || binding.getBoundEntity() == null) return;
 
-        EntityType<?> entityEntry = ForgeRegistries.ENTITIES.getValue(binding.getBoundEntity());
+        EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
         if (entityEntry == null) return;
 
         IShardTier tier = binding.getTier();

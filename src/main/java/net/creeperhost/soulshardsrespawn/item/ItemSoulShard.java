@@ -123,7 +123,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
         if (binding.getBoundEntity() != null)
         {
-            EntityType<?> entityEntry = ForgeRegistries.ENTITIES.getValue(binding.getBoundEntity());
+            EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
             if (entityEntry != null)
             {
                 ResourceLocation resourceLocation = Registry.ENTITY_TYPE.getKey(entityEntry);
@@ -144,8 +144,9 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         return binding != null && binding.getKills() >= Tier.maxKills;
     }
 
+
     @Override
-    public int getItemStackLimit(ItemStack stack)
+    public int getMaxStackSize(ItemStack stack)
     {
         return getBinding(stack) == null ? 64 : 1;
     }
