@@ -59,6 +59,8 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
             if (binding.getKills() >= Tier.maxKills) return InteractionResult.PASS;
 
+            if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof SpawnerBlockEntity)) return InteractionResult.FAIL;
+
             SpawnerBlockEntity mobSpawner = (SpawnerBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
             if (mobSpawner == null) return InteractionResult.PASS;
 
