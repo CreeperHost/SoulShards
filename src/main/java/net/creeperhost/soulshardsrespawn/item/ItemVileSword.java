@@ -17,7 +17,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
 
     public ItemVileSword()
     {
-        super(MATERIAL_VILE, 3, -2.4F, new Properties().tab(SoulShards.TAB_SS));
+        super(MATERIAL_VILE, 3, -2.4F, new Properties());
     }
 
     @Override

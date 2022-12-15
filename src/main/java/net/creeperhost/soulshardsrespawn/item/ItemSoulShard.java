@@ -37,7 +37,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 {
     public ItemSoulShard()
     {
-        super(new Properties().tab(SoulShards.TAB_SS));
+        super(new Properties());
     }
 
     @Override
@@ -59,13 +59,13 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             }
 
             if (binding.getKills() >= Tier.maxKills) return InteractionResult.PASS;
-            if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof SpawnerBlockEntity)) return InteractionResult.FAIL;
+            if (!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof SpawnerBlockEntity)) return InteractionResult.FAIL;
             SpawnerBlockEntity mobSpawner = (SpawnerBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
             if (mobSpawner == null) return InteractionResult.PASS;
 
             try
             {
-                ResourceLocation entityId = Registry.ENTITY_TYPE.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel()).getType());
+                ResourceLocation entityId = ForgeRegistries.ENTITY_TYPES.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(), mobSpawner.getLevel().random, mobSpawner.getBlockPos()).getType());
                 if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
@@ -100,20 +100,21 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         return super.onItemUseFirst(itemStack, context);
     }
 
-    @Override
-    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items)
-    {
-        if (!allowedIn(group)) return;
-
-        items.add(new ItemStack(this));
-        for (IShardTier tier : Tier.INDEXED)
-        {
-            ItemStack stack = new ItemStack(this);
-            Binding binding = new Binding(null, tier.getKillRequirement());
-            updateBinding(stack, binding);
-            items.add(stack);
-        }
-    }
+    //TODO
+//    @Override
+//    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items)
+//    {
+//        if (!allowedIn(group)) return;
+//
+//        items.add(new ItemStack(this));
+//        for (IShardTier tier : Tier.INDEXED)
+//        {
+//            ItemStack stack = new ItemStack(this);
+//            Binding binding = new Binding(null, tier.getKillRequirement());
+//            updateBinding(stack, binding);
+//            items.add(stack);
+//        }
+//    }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag)
@@ -126,7 +127,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
             if (entityEntry != null)
             {
-                ResourceLocation resourceLocation = Registry.ENTITY_TYPE.getKey(entityEntry);
+                ResourceLocation resourceLocation = ForgeRegistries.ENTITY_TYPES.getKey(entityEntry);
                 tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation));
             }
         }

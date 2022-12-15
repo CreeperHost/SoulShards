@@ -26,14 +26,14 @@ public class RegistrarSoulShards
     public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SoulShards.MODID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SoulShards.MODID);
 
-    public static final RegistryObject<Item> VILE_DUST = ITEMS.register("vile_dust", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> VILE_DUST = ITEMS.register("vile_dust", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> VILE_SWORD = ITEMS.register("vile_sword", () -> new ItemVileSword());
-    public static final RegistryObject<Item> CORRUPTED_ESSENCE = ITEMS.register("corrupted_essence", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
-    public static final RegistryObject<Item> CORRUPTED_INGOT = ITEMS.register("corrupted_ingot", () -> new Item(new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> CORRUPTED_ESSENCE = ITEMS.register("corrupted_essence", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> CORRUPTED_INGOT = ITEMS.register("corrupted_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SOUL_SHARD = ITEMS.register("soul_shard", () -> new ItemSoulShard());
 
     public static final RegistryObject<Block> SOUL_CAGE = BLOCKS.register("soul_cage", () -> new BlockSoulCage());
-    public static final RegistryObject<Item> SOUL_CAGE_ITEM = ITEMS.register("soul_cage", () -> new BlockItem(SOUL_CAGE.get(), new Item.Properties().tab(SoulShards.TAB_SS)));
+    public static final RegistryObject<Item> SOUL_CAGE_ITEM = ITEMS.register("soul_cage", () -> new BlockItem(SOUL_CAGE.get(), new Item.Properties()));
 
     public static final RegistryObject<BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE =
             TILES_ENTITIES.register("soul_cage", () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get()).build(null));

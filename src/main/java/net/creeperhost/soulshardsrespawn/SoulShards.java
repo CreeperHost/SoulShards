@@ -26,17 +26,18 @@ public class SoulShards
     public static final String MODID = "soulshards";
     public static final String NAME = "Soul Shards";
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(FMLPaths.CONFIGDIR.get().toFile(), MODID + "/" + MODID + ".json"), new ConfigSoulShards());
-    public static final CreativeModeTab TAB_SS = new CreativeModeTab(MODID)
-    {
-        @Override
-        public ItemStack makeIcon()
-        {
-            ItemStack shard = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
-            Binding binding = new Binding(null, Tier.maxKills);
-            ((ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get()).updateBinding(shard, binding);
-            return shard;
-        }
-    };
+        //TODO
+    //    public static final CreativeModeTab TAB_SS = new CreativeModeTab(MODID)
+//    {
+//        @Override
+//        public ItemStack getIconItem()
+//        {
+//            ItemStack shard = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
+//            Binding binding = new Binding(null, Tier.maxKills);
+//            ((ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get()).updateBinding(shard, binding);
+//            return shard;
+//        }
+//    };
 
     public SoulShards()
     {

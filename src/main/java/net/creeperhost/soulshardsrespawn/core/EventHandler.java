@@ -42,7 +42,7 @@ public class EventHandler
         if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getEntity() instanceof FakePlayer)
             return;
 
-        ResourceLocation resourceLocation = Registry.ENTITY_TYPE.getKey(event.getEntity().getType());
+        ResourceLocation resourceLocation = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
         if (!SoulShards.CONFIG.getEntityList().isEnabled(resourceLocation)) return;
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !event.getEntity().canChangeDimensions()) return;
