@@ -1,6 +1,5 @@
 package net.creeperhost.soulshardsrespawn.item;
 
-import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.ISoulWeapon;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.world.entity.LivingEntity;
