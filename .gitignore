@@ -12,6 +12,7 @@
 /.metadata/
 /.settings/
 /libs/
+/src/generated/resources/.cache/
 
 # File Extensions
 *.psd
