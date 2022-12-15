@@ -21,7 +21,7 @@ public class SoulShardDataGen
 
     public static void registerServerProviders(DataGenerator generator)
     {
-
+        generator.addProvider(true, new SoulShardsLootProvider(generator.getPackOutput()));
     }
 
     public static void registerClientProviders(DataGenerator generator, ExistingFileHelper existingFileHelper)
