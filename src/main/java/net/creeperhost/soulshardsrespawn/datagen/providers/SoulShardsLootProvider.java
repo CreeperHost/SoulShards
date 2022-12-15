@@ -1,6 +1,7 @@
-package net.creeperhost.soulshardsrespawn.datagen;
+package net.creeperhost.soulshardsrespawn.datagen.providers;
 
 import com.google.common.collect.ImmutableList;
+import net.creeperhost.soulshardsrespawn.datagen.GeneratorBlockLoot;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;

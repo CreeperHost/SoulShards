@@ -2,6 +2,7 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
+import net.creeperhost.soulshardsrespawn.datagen.providers.SoulShardsLootProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.LanguageProvider;
