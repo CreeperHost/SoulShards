@@ -3,6 +3,7 @@ package net.creeperhost.soulshardsrespawn.datagen;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.data.DataGenerator;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,7 +16,7 @@ public class SoulShardDataGen
     public static void gatherData(GatherDataEvent event)
     {
         if(event.includeServer()) registerServerProviders(event.getGenerator());
-        if(event.includeClient()) registerClientProviders(event.getGenerator());
+        if(event.includeClient()) registerClientProviders(event.getGenerator(), event.getExistingFileHelper());
     }
 
     public static void registerServerProviders(DataGenerator generator)
@@ -23,14 +24,14 @@ public class SoulShardDataGen
 
     }
 
-    public static void registerClientProviders(DataGenerator generator)
+    public static void registerClientProviders(DataGenerator generator, ExistingFileHelper existingFileHelper)
     {
         generator.addProvider(true, new GeneratorLanguage(generator));
+        generator.addProvider(true, new GeneratorItemModels(generator, existingFileHelper));
     }
 
     public static class GeneratorLanguage extends LanguageProvider
     {
-
         public GeneratorLanguage(DataGenerator gen)
         {
             super(gen, SoulShards.MODID, "en_us");
