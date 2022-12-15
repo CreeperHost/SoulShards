@@ -57,7 +57,6 @@ public class SoulShards
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event)
     {
-        SoulShardsClient.initClient();
         event.enqueueWork(() ->
         {
             ItemProperties.register(RegistrarSoulShards.SOUL_SHARD.get(), new ResourceLocation(MODID, "bound"), (stack, level, living, id) ->
