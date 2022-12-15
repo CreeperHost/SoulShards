@@ -15,7 +15,7 @@ public class GeneratorItemModels extends ItemModelProvider
 {
     public GeneratorItemModels(DataGenerator generator, ExistingFileHelper existingFileHelper)
     {
-        super(generator, SoulShards.MODID, existingFileHelper);
+        super(generator.getPackOutput(), SoulShards.MODID, existingFileHelper);
     }
 
     @Override

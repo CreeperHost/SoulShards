@@ -35,7 +35,7 @@ public class SoulShardDataGen
     {
         public GeneratorLanguage(DataGenerator gen)
         {
-            super(gen, SoulShards.MODID, "en_us");
+            super(gen.getPackOutput(), SoulShards.MODID, "en_us");
         }
 
         @Override
