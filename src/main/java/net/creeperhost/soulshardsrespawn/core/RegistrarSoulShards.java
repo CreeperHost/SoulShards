@@ -1,5 +1,6 @@
 package net.creeperhost.soulshardsrespawn.core;
 
+import net.creeperhost.polylib.registry.CreativeTabRegistry;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.block.BlockSoulCage;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
@@ -7,9 +8,8 @@ import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.EnchantmentSoulStealer;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.creeperhost.soulshardsrespawn.item.ItemVileSword;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;

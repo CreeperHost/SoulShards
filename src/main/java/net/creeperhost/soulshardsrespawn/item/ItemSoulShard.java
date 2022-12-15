@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
@@ -100,21 +101,19 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         return super.onItemUseFirst(itemStack, context);
     }
 
-    //TODO
-//    @Override
-//    public void fillItemCategory(@NotNull CreativeModeTab group, @NotNull NonNullList<ItemStack> items)
-//    {
-//        if (!allowedIn(group)) return;
-//
-//        items.add(new ItemStack(this));
-//        for (IShardTier tier : Tier.INDEXED)
-//        {
-//            ItemStack stack = new ItemStack(this);
-//            Binding binding = new Binding(null, tier.getKillRequirement());
-//            updateBinding(stack, binding);
-//            items.add(stack);
-//        }
-//    }
+    public List<ItemStack> fillItemCategory()
+    {
+        List<ItemStack> items = new ArrayList<>();
+        items.add(new ItemStack(this));
+        for (IShardTier tier : Tier.INDEXED)
+        {
+            ItemStack stack = new ItemStack(this);
+            Binding binding = new Binding(null, tier.getKillRequirement());
+            updateBinding(stack, binding);
+            items.add(stack);
+        }
+        return items;
+    }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag)

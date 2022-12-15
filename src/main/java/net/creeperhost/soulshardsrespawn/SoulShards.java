@@ -8,9 +8,10 @@ import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,18 +27,6 @@ public class SoulShards
     public static final String MODID = "soulshards";
     public static final String NAME = "Soul Shards";
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(FMLPaths.CONFIGDIR.get().toFile(), MODID + "/" + MODID + ".json"), new ConfigSoulShards());
-        //TODO
-    //    public static final CreativeModeTab TAB_SS = new CreativeModeTab(MODID)
-//    {
-//        @Override
-//        public ItemStack getIconItem()
-//        {
-//            ItemStack shard = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
-//            Binding binding = new Binding(null, Tier.maxKills);
-//            ((ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get()).updateBinding(shard, binding);
-//            return shard;
-//        }
-//    };
 
     public SoulShards()
     {
@@ -48,7 +37,21 @@ public class SoulShards
         RegistrarSoulShards.BLOCKS.register(eventBus);
         RegistrarSoulShards.TILES_ENTITIES.register(eventBus);
         RegistrarSoulShards.ENCHANTMENTS.register(eventBus);
+        eventBus.addListener(this::registerCreativeTab);
         eventBus.addListener(this::setupClient);
+    }
+
+    public void registerCreativeTab(CreativeModeTabEvent.Register event)
+    {
+        event.registerCreativeModeTab(new ResourceLocation(MODID, "creative_tab"), builder -> builder.icon(() -> new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
+                .title(Component.translatable("itemGroup.soulshards"))
+                .displayItems((features, output, hasPermissions) ->
+                {
+                    RegistrarSoulShards.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(new ItemStack(itemRegistryObject.get())));
+                    ItemSoulShard itemSoulShard = (ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get();
+                    itemSoulShard.fillItemCategory().forEach(output::accept);
+                }));
+
     }
 
     @SubscribeEvent
