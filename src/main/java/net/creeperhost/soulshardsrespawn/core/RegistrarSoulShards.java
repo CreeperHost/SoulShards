@@ -24,16 +24,22 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(SoulShards.MODID)
 public class RegistrarSoulShards
 {
-    public static final Block SOUL_CAGE = Blocks.AIR;
+    @ObjectHolder("soul_cage")
+    public static Block SOUL_CAGE;
 
     @ObjectHolder("soul_cage")
-    public static final BlockEntityType<?> SOUL_CAGE_TE = BlockEntityType.BED;
+    public static BlockEntityType<TileEntitySoulCage> SOUL_CAGE_TE;
 
-    public static final Item SOUL_SHARD = Items.AIR;
-    public static final Item VILE_SWORD = Items.AIR;
-    public static final Item CORRUPTED_ESSENCE = Items.AIR;
-    public static final Item CORRUPTED_INGOT = Items.AIR;
-    public static final Item VILE_DUST = Items.AIR;
+    @ObjectHolder("soul_shard")
+    public static Item SOUL_SHARD;
+    @ObjectHolder("vile_sword")
+    public static Item VILE_SWORD;
+    @ObjectHolder("corrupted_essence")
+    public static Item CORRUPTED_ESSENCE;
+    @ObjectHolder("corrupted_ingot")
+    public static Item CORRUPTED_INGOT;
+    @ObjectHolder("vile_dust")
+    public static Item VILE_DUST;
 
     public static final Enchantment SOUL_STEALER = Enchantments.INFINITY_ARROWS;
 
@@ -53,8 +59,12 @@ public class RegistrarSoulShards
     public static void registerItems(RegistryEvent.Register<Item> event)
     {
         Tier.readTiers();
-
-        event.getRegistry().registerAll(new BlockItem(SOUL_CAGE, new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName(SOUL_CAGE.getRegistryName()), new ItemVileSword().setRegistryName("vile_sword"), new ItemSoulShard().setRegistryName("soul_shard"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_essence"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_ingot"), new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("vile_dust"));
+        event.getRegistry().register(new BlockItem(SOUL_CAGE, new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("soul_cage"));
+        event.getRegistry().register(new ItemVileSword().setRegistryName("vile_sword"));
+        event.getRegistry().register(new ItemSoulShard().setRegistryName("soul_shard"));
+        event.getRegistry().register(new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_essence"));
+        event.getRegistry().register(new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("corrupted_ingot"));
+        event.getRegistry().register(new Item(new Item.Properties().tab(SoulShards.TAB_SS)).setRegistryName("vile_dust"));
     }
 
     @SubscribeEvent

@@ -16,8 +16,11 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -26,10 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Recipe>
-{
-    public static final Component TITLE = new TextComponent("Soul Shard Crafting");
-
+public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Recipe> {
     public static final RecipeType<MultiblockCategory.Recipe> SOUL_SHARD_CRAFTING =
             RecipeType.create(SoulShards.MODID, "soulshardcrafting", MultiblockCategory.Recipe.class);
 
@@ -37,8 +37,7 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
     private final IDrawable multiblock;
     private final IDrawable arrowRight;
 
-    public MultiblockCategory(IGuiHelper iGuiHelper)
-    {
+    public MultiblockCategory(IGuiHelper iGuiHelper) {
         this.iGuiHelper = iGuiHelper;
 
         IDrawable obsidian = iGuiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Blocks.OBSIDIAN));
@@ -50,79 +49,65 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
     }
 
     @Override
-    public @NotNull RecipeType<Recipe> getRecipeType()
-    {
+    public @NotNull RecipeType<Recipe> getRecipeType() {
         return SOUL_SHARD_CRAFTING;
     }
 
     @Override
-    public @NotNull Component getTitle()
-    {
-        return TITLE;
+    public @NotNull Component getTitle() {
+        return new TranslatableComponent("jei.soulshards.soul_shard.title");
     }
 
     @Override
-    public @NotNull IDrawable getBackground()
-    {
+    public @NotNull IDrawable getBackground() {
         return iGuiHelper.createBlankDrawable(114, 131);
     }
 
     @Override
-    public @NotNull IDrawable getIcon()
-    {
+    public @NotNull IDrawable getIcon() {
         return iGuiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(RegistrarSoulShards.SOUL_SHARD));
     }
 
     @Override
-    public void draw(@NotNull Recipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY)
-    {
+    public void draw(@NotNull Recipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull PoseStack stack, double mouseX, double mouseY) {
         RenderSystem.enableBlend();
 
         multiblock.draw(stack, 10, 30);
-
         arrowRight.draw(stack, 60, 30);
+
         Font font = Minecraft.getInstance().font;
-        font.draw(stack, "Right-click on the top", 2, 70, 0);
-        font.draw(stack, "of the " + ChatFormatting.DARK_PURPLE + "Glowstone Block", 2, 80, 0);
-        font.draw(stack, "with a " + ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString() + ChatFormatting.BLACK + " in hand", 2, 90, 0);
+        drawSplitString(font, new TranslatableComponent("jei.soulshards.soul_shard.creation", ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString()), stack, 0, 70, 114, 0);
 
         RenderSystem.disableBlend();
     }
 
     @Override
-    public @NotNull List<Component> getTooltipStrings(@NotNull Recipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY)
-    {
+    public @NotNull List<Component> getTooltipStrings(@NotNull Recipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         List<Component> components = new ArrayList<>();
-        if(isInRect(10, 30, 40, 36, mouseX, mouseY))
-        {
-            components.add(new TextComponent("4x " + Blocks.OBSIDIAN.getName().getString()));
-            components.add(new TextComponent("4x " + Blocks.QUARTZ_BLOCK.getName().getString()));
-            components.add(new TextComponent("1x " + Blocks.GLOWSTONE.getName().getString()));
+        if (isInRect(10, 30, 40, 36, mouseX, mouseY)) {
+            Minecraft mc = Minecraft.getInstance();
+            splitComponent(mc.font, new TranslatableComponent("jei.soulshards.soul_shard.multiblock"), mc.getWindow().getGuiScaledWidth()).forEach(s -> components.add(new TextComponent(s.getString())));
         }
 
         return components;
     }
 
     @Override
-    public ResourceLocation getUid()
-    {
+    public ResourceLocation getUid() {
         return SOUL_SHARD_CRAFTING.getUid();
     }
 
     @Override
-    public Class<? extends Recipe> getRecipeClass()
-    {
+    public Class<? extends Recipe> getRecipeClass() {
         return Recipe.class;
     }
 
-    public boolean isInRect(int x, int y, int xSize, int ySize, double mouseX, double mouseY)
-    {
+    public boolean isInRect(int x, int y, int xSize, int ySize, double mouseX, double mouseY) {
         return ((mouseX >= x && mouseX <= x + xSize) && (mouseY >= y && mouseY <= y + ySize));
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull Recipe recipe, @NotNull IFocusGroup focuses)
-    {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull Recipe recipe, @NotNull IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 23, 1)
                 .addItemStack(recipe.getInput());
 
@@ -130,24 +115,31 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
                 .addItemStack(recipe.getOutput());
     }
 
-    public static class Recipe
-    {
+    private List<FormattedText> splitComponent(Font font, FormattedText text, int width) {
+        return font.getSplitter().splitLines(text, width, Style.EMPTY);
+    }
+
+    public void drawSplitString(Font font, FormattedText text, PoseStack poseStack, float x, float y, int width, int colour) {
+        for (FormattedText s : splitComponent(font, text, width)) {
+            font.draw(poseStack, Language.getInstance().getVisualOrder(s), x, y, colour);
+            y += font.lineHeight;
+        }
+    }
+
+    public static class Recipe {
         private final ItemStack input;
         private final ItemStack output;
 
-        public Recipe(ItemStack input, ItemStack output)
-        {
+        public Recipe(ItemStack input, ItemStack output) {
             this.input = input;
             this.output = output;
         }
 
-        public ItemStack getInput()
-        {
+        public ItemStack getInput() {
             return input;
         }
 
-        public ItemStack getOutput()
-        {
+        public ItemStack getOutput() {
             return output;
         }
     }

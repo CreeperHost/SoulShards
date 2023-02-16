@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "soulshards:block/soul_cage_inactive"
+    },
+    "active=true": {
+      "model": "soulshards:block/soul_cage_active"
+    }
+  }
+}
