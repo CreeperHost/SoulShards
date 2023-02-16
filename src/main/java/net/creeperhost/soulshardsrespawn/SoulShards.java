@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -42,29 +44,6 @@ public class SoulShards
 
     public SoulShards()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-    }
-
-    @SubscribeEvent
-    public void setupClient(FMLClientSetupEvent event)
-    {
-        SoulShardsClient.initClient();
-        event.enqueueWork(() ->
-        {
-            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "bound"), (stack, level, living, id) ->
-            {
-                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
-                return soulShard.getBinding(stack) != null ? 1.0F : 0.0F;
-            });
-
-            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD, new ResourceLocation(MODID, "tier"), (stack, level, living, id) ->
-            {
-                ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
-                Binding binding = soulShard.getBinding(stack);
-                if(binding == null) return 0F;
-
-                return Float.parseFloat("0." + Tier.INDEXED.indexOf(binding.getTier()));
-            });
-        });
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientInit::init);
     }
 }

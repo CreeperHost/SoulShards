@@ -30,80 +30,68 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockSoulCage extends BaseEntityBlock
-{
+public class BlockSoulCage extends BaseEntityBlock {
     public static final Property<Boolean> POWERED = BooleanProperty.create("powered");
     public static final Property<Boolean> ACTIVE = BooleanProperty.create("active");
 
-    public BlockSoulCage()
-    {
+    public BlockSoulCage() {
         super(Properties.of(Material.METAL).strength(3.0F).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_49232_)
-    {
+    public RenderShape getRenderShape(BlockState p_49232_) {
         return RenderShape.MODEL;
     }
 
     @org.jetbrains.annotations.Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
-    {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return (level1, blockPos, blockState, t) ->
         {
-            if (t instanceof TileEntitySoulCage tile)
-            {
+            if (t instanceof TileEntitySoulCage tile) {
                 tile.tick();
             }
         };
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
-    {
-        if (!player.isSteppingCarefully()) return InteractionResult.PASS;
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.isShiftKeyDown() || level.isClientSide) return InteractionResult.PASS;
 
-        TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
+        TileEntitySoulCage cage = (TileEntitySoulCage) level.getBlockEntity(pos);
         if (cage == null) return InteractionResult.PASS;
 
         ItemStack stack = cage.getInventory().extractItem(0, 1, false);
         if (stack.isEmpty()) return InteractionResult.PASS;
 
         ItemHandlerHelper.giveItemToPlayer(player, stack);
+        level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), 3);
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState state2, boolean someBool)
-    {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState state2, boolean someBool) {
         handleRedstoneChange(world, state, pos);
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean someBool)
-    {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean someBool) {
         handleRedstoneChange(world, state, pos);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random)
-    {
-        if (state.getValue(POWERED) && !world.hasNeighborSignal(pos))
-        {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+        if (state.getValue(POWERED) && !world.hasNeighborSignal(pos)) {
             world.setBlock(pos, state.setValue(POWERED, false), 3);
         }
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState blockState2, boolean someBool)
-    {
-        if (state.getBlock() != blockState2.getBlock())
-        {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState blockState2, boolean someBool) {
+        if (state.getBlock() != blockState2.getBlock()) {
             TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
-            if (cage != null)
-            {
+            if (cage != null) {
                 ItemStack stack = cage.getInventory().getStackInSlot(0);
                 Containers.dropContents(world, pos, NonNullList.of(ItemStack.EMPTY, stack));
             }
@@ -112,20 +100,17 @@ public class BlockSoulCage extends BaseEntityBlock
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side)
-    {
+    public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side) {
         return true;
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState p_149740_1_)
-    {
+    public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos)
-    {
+    public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
         if (cage == null) return 0;
 
@@ -136,13 +121,11 @@ public class BlockSoulCage extends BaseEntityBlock
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
-    {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED, ACTIVE);
     }
 
-    private void handleRedstoneChange(Level world, BlockState state, BlockPos pos)
-    {
+    private void handleRedstoneChange(Level world, BlockState state, BlockPos pos) {
         boolean powered = world.hasNeighborSignal(pos);
         if (state.getValue(POWERED) && !powered) world.setBlock(pos, state.setValue(POWERED, false), 2);
         else if (!state.getValue(POWERED) && powered) world.setBlock(pos, state.setValue(POWERED, true), 2);
@@ -150,8 +133,7 @@ public class BlockSoulCage extends BaseEntityBlock
 
     @org.jetbrains.annotations.Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
-    {
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new TileEntitySoulCage(blockPos, blockState);
     }
 }
