@@ -1,4 +1,4 @@
-# Soul Shards Respawn [![](http://cf.way2muchnoise.eu/full_576589_downloads.svg)](https://minecraft.curseforge.com/projects/soul-shards-respawn)
+# Soul Shards [![](http://cf.way2muchnoise.eu/full_576589_downloads.svg)]([https://minecraft.curseforge.com/projects/soul-shards-respawn](https://www.curseforge.com/minecraft/mc-mods/creeperhost-presents-soul-shards))
 
 Ever wanted to create your own mob spawners? Now you can!
 
