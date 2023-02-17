@@ -8,18 +8,21 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,57 +30,71 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class TileEntitySoulCage extends BlockEntity
-{
+public class TileEntitySoulCage extends BlockEntity {
     private ItemStackHandler inventory;
-    private int activeTime;
+    private Entity renderEntity = null;
+    private int maxSpawnDelay = 200;
+    private int spawnDelay;
     private boolean active = false;
 
-    public TileEntitySoulCage(BlockPos blockPos, BlockState blockState)
-    {
+    public float rotation = 0;
+    public float lastRotation = 0;
+
+    public TileEntitySoulCage(BlockPos blockPos, BlockState blockState) {
         super(RegistrarSoulShards.SOUL_CAGE_TE.get(), blockPos, blockState);
-        this.inventory = new SoulCageInventory()
-        {
+        this.inventory = new SoulCageInventory() {
             @Override
-            protected void onContentsChanged(int slot)
-            {
+            protected void onContentsChanged(int slot) {
                 setChanged();
                 super.onContentsChanged(slot);
             }
         };
     }
 
-    public void tick()
-    {
-        if (level.isClientSide) return;
+    public void tick() {
+        if (level.isClientSide) {
+            if (spawnDelay > 0) spawnDelay--;
+            float speed = 1F - (spawnDelay / (float) maxSpawnDelay);
+            lastRotation = rotation;
+            if (active){
+                RandomSource randomsource = level.getRandom();
+                double d0 = (double)worldPosition.getX() + randomsource.nextDouble();
+                double d1 = (double)worldPosition.getY() + randomsource.nextDouble();
+                double d2 = (double)worldPosition.getZ() + randomsource.nextDouble();
+                level.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.FLAME, d0, d1, d2, 0.0D, 0.0D, 0.0D);
+                if (this.spawnDelay > 0) {
+                    --this.spawnDelay;
+                }
 
-        InteractionResultHolder<Binding> result = canSpawn();
-        if (result.getResult() != InteractionResult.SUCCESS)
-        {
-            if (active)
-            {
-                setState(false);
-                level.neighborChanged(getBlockPos(), getBlockState().getBlock(), getBlockPos());
+                rotation = (rotation + (speed * 5F)) % 360.0F;
             }
             return;
         }
 
-        if (!active)
-        {
-            setState(true);
-            level.neighborChanged(getBlockPos(), getBlockState().getBlock(), getBlockPos());
+        InteractionResultHolder<Binding> result = canSpawn();
+        if (result.getResult() != InteractionResult.SUCCESS) {
+            if (active) {
+                setState(false);
+            }
+            return;
         }
-        activeTime++;
 
-        if (activeTime % result.getObject().getTier().getCooldown() == 0) spawnEntities();
+        if (!active) {
+            setState(true);
+        }
+        spawnDelay--;
+        if (spawnDelay <= 0) {
+            spawnEntities();
+            spawnDelay = maxSpawnDelay = Math.max(result.getObject().getTier().getCooldown(), 1);
+            level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+            level.levelEvent(2004, worldPosition, 0); //Spawn Particles
+        }
     }
 
-    private void spawnEntities()
-    {
+    private void spawnEntities() {
         Binding binding = getBinding();
         if (binding == null || binding.getBoundEntity() == null) return;
 
@@ -85,10 +102,8 @@ public class TileEntitySoulCage extends BlockEntity
         if (entityEntry == null) return;
 
         IShardTier tier = binding.getTier();
-        for (int i = 0; i < tier.getSpawnAmount(); i++)
-        {
-            for (int attempts = 0; attempts < 5; attempts++)
-            {
+        for (int i = 0; i < tier.getSpawnAmount(); i++) {
+            for (int attempts = 0; attempts < 5; attempts++) {
                 double x = getBlockPos().getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D + 0.5D;
                 double y = getBlockPos().getY() + level.random.nextInt(3);
                 double z = getBlockPos().getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D + 0.5D;
@@ -104,8 +119,7 @@ public class TileEntitySoulCage extends BlockEntity
                 entityLiving.moveTo(spawnAt, level.random.nextFloat() * 360F, 0F);
                 entityLiving.getPersistentData().putBoolean("cageBorn", true);
 
-                if (entityLiving.isAlive() && !hasReachedSpawnCap(entityLiving) && level.noCollision(entityLiving))
-                {
+                if (entityLiving.isAlive() && !hasReachedSpawnCap(entityLiving) && level.noCollision(entityLiving)) {
                     if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !entityLiving.canChangeDimensions())
                         continue;
 
@@ -121,8 +135,7 @@ public class TileEntitySoulCage extends BlockEntity
         }
     }
 
-    private InteractionResultHolder<Binding> canSpawn()
-    {
+    private InteractionResultHolder<Binding> canSpawn() {
         BlockState state = getBlockState();
         if (state.getBlock() != RegistrarSoulShards.SOUL_CAGE.get())
             return new InteractionResultHolder<>(InteractionResult.FAIL, null);
@@ -145,12 +158,10 @@ public class TileEntitySoulCage extends BlockEntity
         if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
             return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
 
-        if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal())
-        {
+        if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
             if (state.getValue(BlockSoulCage.POWERED) && tier.checkRedstone())
                 return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
-        }
-        else if (!state.getValue(BlockSoulCage.POWERED))
+        } else if (!state.getValue(BlockSoulCage.POWERED))
             return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
 
         if (tier.checkPlayer() && level.getNearestPlayer(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 16, false) == null)
@@ -159,51 +170,47 @@ public class TileEntitySoulCage extends BlockEntity
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, binding);
     }
 
-    private boolean canSpawnInLight(LivingEntity entityLiving, BlockPos pos)
-    {
+    private boolean canSpawnInLight(LivingEntity entityLiving, BlockPos pos) {
         boolean light = level.getLightEngine().getRawBrightness(getBlockPos(), 15) <= 8;
         return !(entityLiving instanceof Mob) || light;
     }
 
-    private boolean hasReachedSpawnCap(LivingEntity living)
-    {
+    private boolean hasReachedSpawnCap(LivingEntity living) {
         AABB box = new AABB(getBlockPos().getX() - 16, getBlockPos().getY() - 16, getBlockPos().getZ() - 16, getBlockPos().getX() + 16, getBlockPos().getY() + 16, getBlockPos().getZ() + 16);
 
         int mobCount = level.getEntitiesOfClass(living.getClass(), box, e -> e != null && e.getPersistentData().getBoolean("cageBorn")).size();
         return mobCount >= SoulShards.CONFIG.getBalance().getSpawnCap();
     }
 
-    public void setState(boolean active)
-    {
+    public void setState(boolean active) {
         BlockState state = getBlockState();
         if (!(state.getBlock() instanceof BlockSoulCage)) return;
 
         level.setBlock(getBlockPos(), state.setValue(BlockSoulCage.ACTIVE, active), 3);
         this.active = active;
+        level.neighborChanged(getBlockPos(), getBlockState().getBlock(), getBlockPos());
     }
 
     @Override
-    public void load(CompoundTag tag)
-    {
+    public void load(CompoundTag tag) {
         super.load(tag);
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
-        this.activeTime = tag.getInt("activeTime");
+        this.spawnDelay = tag.getInt("spawnDelay");
+        this.maxSpawnDelay = tag.getInt("maxSpawnDelay");
         this.active = tag.getBoolean("active");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag)
-    {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag) {
         tag.put("inventory", inventory.serializeNBT());
-        tag.putInt("activeTime", activeTime);
+        tag.putInt("spawnDelay", spawnDelay);
+        tag.putInt("maxSpawnDelay", maxSpawnDelay);
         tag.putBoolean("active", active);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side)
-    {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @NotNull Direction side) {
         if (cap != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return LazyOptional.empty();
 
         return LazyOptional.of(() -> inventory).cast();
@@ -211,43 +218,72 @@ public class TileEntitySoulCage extends BlockEntity
 
     @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap)
-    {
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
         return super.getCapability(cap);
     }
 
-    public ItemStackHandler getInventory()
-    {
+    public ItemStackHandler getInventory() {
         return inventory;
     }
 
     @Nullable
-    public Binding getBinding()
-    {
+    public Binding getBinding() {
         ItemStack stack = inventory.getStackInSlot(0);
         if (stack.isEmpty() || !(stack.getItem() instanceof ItemSoulShard)) return null;
 
         return ((ItemSoulShard) stack.getItem()).getBinding(stack);
     }
 
-    public boolean ownerOnline()
-    {
+    public boolean ownerOnline() {
         Binding binding = getBinding();
         //noinspection ConstantConditions
         return binding != null && binding.getOwner() != null && level.getServer().getPlayerList().getPlayer(binding.getOwner()) == null;
     }
 
-    public static class SoulCageInventory extends ItemStackHandler
-    {
-        public SoulCageInventory()
-        {
+    @Nullable
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag compound = super.getUpdateTag();
+        saveAdditional(compound);
+        return compound;
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        if (pkt.getTag() != null) load(pkt.getTag());
+    }
+
+    @Nullable
+    @OnlyIn(Dist.CLIENT)
+    public Entity getRenderEntity() {
+        Binding binding = getBinding();
+        if (binding == null || binding.getBoundEntity() == null) {
+            renderEntity = null;
+            return null;
+        }
+
+        if (renderEntity == null) {
+            EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
+            if (entityEntry == null) return null;
+            renderEntity = entityEntry.create(level);
+        }
+        return renderEntity;
+    }
+
+    public static class SoulCageInventory extends ItemStackHandler {
+
+        public SoulCageInventory() {
             super(1);
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
-        {
+        public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (!(stack.getItem() instanceof ItemSoulShard)) return stack;
 
             Binding binding = ((ItemSoulShard) stack.getItem()).getBinding(stack);
