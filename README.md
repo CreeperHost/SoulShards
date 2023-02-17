@@ -1,6 +1,6 @@
 # Soul Shards
 
-<a href="https://www.curseforge.com/minecraft/mc-mods/creeperhost-presents-soul-shard"><img src="http://cf.way2muchnoise.eu/full_576589_downloads.svg" /></a>
+<a href="https://www.curseforge.com/minecraft/mc-mods/creeperhost-presents-soul-shards"><img src="http://cf.way2muchnoise.eu/full_576589_downloads.svg" /></a>
 
 
 Ever wanted to create your own mob spawners? Now you can!
