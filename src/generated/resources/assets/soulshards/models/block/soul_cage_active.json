@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "all": "soulshards:block/soul_cage_active"
+  }
+}

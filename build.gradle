@@ -93,6 +93,7 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
+
     implementation fg.deobf("dev.architectury:architectury-forge:${rootProject.architectury_version}")
     implementation fg.deobf("net.creeperhost:polylib-forge:${rootProject.polylib_version}")
 
@@ -100,10 +101,9 @@ dependencies {
     // runtimeOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
 
 
-    compileOnly fg.deobf("mezz.jei:jei-1.19-common-api:${project.jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:${project.jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:${project.jei_version}")
-
+    compileOnly fg.deobf("mezz.jei:jei-${project.mc_version}-common-api:${project.jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${project.mc_version}-forge-api:${project.jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.mc_version}-forge:${project.jei_version}")
 }
 
 jar {
