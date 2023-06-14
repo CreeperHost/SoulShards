@@ -25,16 +25,13 @@ public class RegistrarSoulShards
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SoulShards.MODID);
 
-    public static final RegistryObject<CreativeModeTab> TAB = CREATIVE_TAB.register(SoulShards.MODID, () -> CreativeModeTab
-            .builder(CreativeModeTab.Row.TOP, 0)
-            .displayItems(
-            (itemDisplayParameters, output) -> {
+    public static final RegistryObject<CreativeModeTab> TAB = CREATIVE_TAB.register(SoulShards.MODID, () ->
+            CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).displayItems((itemDisplayParameters, output) -> {
                 ITEMS.getEntries().forEach(e -> output.accept(e.get()));
-            }
-    )
-            .icon(() ->  new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
-            .title(Component.translatable("itemGroup.soulshards"))
-            .build());
+                ItemSoulShard itemSoulShard = (ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get();
+                itemSoulShard.fillItemCategory().forEach(output::accept);
+            }).icon(() ->  new ItemStack(RegistrarSoulShards.SOUL_SHARD.get())).title(Component.translatable("itemGroup.soulshards")).build());
+
     public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SoulShards.MODID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SoulShards.MODID);
 

@@ -37,22 +37,8 @@ public class SoulShards
         RegistrarSoulShards.TILES_ENTITIES.register(eventBus);
         RegistrarSoulShards.ENCHANTMENTS.register(eventBus);
         RegistrarSoulShards.CREATIVE_TAB.register(eventBus);
-//        eventBus.addListener(this::registerCreativeTab);
         eventBus.addListener(this::setupClient);
     }
-
-//    public void registerCreativeTab(CreativeModeTabEvent.Register event)
-//    {
-//        event.registerCreativeModeTab(new ResourceLocation(MODID, "creative_tab"), builder -> builder.icon(() -> new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
-//                .title(Component.translatable("itemGroup.soulshards"))
-//                .displayItems((features, output, hasPermissions) ->
-//                {
-//                    RegistrarSoulShards.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(new ItemStack(itemRegistryObject.get())));
-//                    ItemSoulShard itemSoulShard = (ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get();
-//                    itemSoulShard.fillItemCategory().forEach(output::accept);
-//                }));
-//
-//    }
 
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event)
