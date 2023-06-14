@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -37,7 +37,7 @@ public class BlockSoulCage extends BaseEntityBlock
 
     public BlockSoulCage()
     {
-        super(Properties.of(Material.METAL).strength(3.0F).noOcclusion());
+        super(Properties.of().mapColor(MapColor.METAL).strength(3.0F).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 

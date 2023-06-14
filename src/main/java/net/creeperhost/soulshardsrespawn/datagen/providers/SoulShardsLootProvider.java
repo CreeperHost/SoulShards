@@ -5,8 +5,9 @@ import net.creeperhost.soulshardsrespawn.datagen.GeneratorBlockLoot;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootDataId;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
@@ -30,8 +31,11 @@ public class SoulShardsLootProvider extends LootTableProvider
     @Override
     protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext)
     {
-        map.forEach((p_218436_2_, p_218436_3_) -> {
-            LootTables.validate(validationcontext, p_218436_2_, p_218436_3_);
+        map.forEach((p_278897_, p_278898_) -> {
+            p_278898_.validate(validationcontext.setParams(p_278898_.getParamSet()).enterElement("{" + p_278897_ + "}", new LootDataId<>(LootDataType.TABLE, p_278897_)));
         });
+//        map.forEach((p_218436_2_, p_218436_3_) -> {
+//            LootTables.validate(validationcontext, p_218436_2_, p_218436_3_);
+//        });
     }
 }

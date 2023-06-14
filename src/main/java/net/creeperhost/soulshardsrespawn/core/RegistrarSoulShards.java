@@ -1,24 +1,40 @@
 package net.creeperhost.soulshardsrespawn.core;
 
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.block.BlockSoulCage;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
 import net.creeperhost.soulshardsrespawn.core.util.EnchantmentSoulStealer;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.creeperhost.soulshardsrespawn.item.ItemVileSword;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.checkerframework.checker.units.qual.C;
 
 public class RegistrarSoulShards
 {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SoulShards.MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SoulShards.MODID);
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SoulShards.MODID);
+
+    public static final RegistryObject<CreativeModeTab> TAB = CREATIVE_TAB.register(SoulShards.MODID, () -> CreativeModeTab
+            .builder(CreativeModeTab.Row.TOP, 0)
+            .displayItems(
+            (itemDisplayParameters, output) -> {
+                ITEMS.getEntries().forEach(e -> output.accept(e.get()));
+            }
+    )
+            .icon(() ->  new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
+            .title(Component.translatable("itemGroup.soulshards"))
+            .build());
     public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, SoulShards.MODID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SoulShards.MODID);
 

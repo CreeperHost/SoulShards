@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,22 +36,23 @@ public class SoulShards
         RegistrarSoulShards.BLOCKS.register(eventBus);
         RegistrarSoulShards.TILES_ENTITIES.register(eventBus);
         RegistrarSoulShards.ENCHANTMENTS.register(eventBus);
-        eventBus.addListener(this::registerCreativeTab);
+        RegistrarSoulShards.CREATIVE_TAB.register(eventBus);
+//        eventBus.addListener(this::registerCreativeTab);
         eventBus.addListener(this::setupClient);
     }
 
-    public void registerCreativeTab(CreativeModeTabEvent.Register event)
-    {
-        event.registerCreativeModeTab(new ResourceLocation(MODID, "creative_tab"), builder -> builder.icon(() -> new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
-                .title(Component.translatable("itemGroup.soulshards"))
-                .displayItems((features, output, hasPermissions) ->
-                {
-                    RegistrarSoulShards.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(new ItemStack(itemRegistryObject.get())));
-                    ItemSoulShard itemSoulShard = (ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get();
-                    itemSoulShard.fillItemCategory().forEach(output::accept);
-                }));
-
-    }
+//    public void registerCreativeTab(CreativeModeTabEvent.Register event)
+//    {
+//        event.registerCreativeModeTab(new ResourceLocation(MODID, "creative_tab"), builder -> builder.icon(() -> new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()))
+//                .title(Component.translatable("itemGroup.soulshards"))
+//                .displayItems((features, output, hasPermissions) ->
+//                {
+//                    RegistrarSoulShards.ITEMS.getEntries().forEach(itemRegistryObject -> output.accept(new ItemStack(itemRegistryObject.get())));
+//                    ItemSoulShard itemSoulShard = (ItemSoulShard) RegistrarSoulShards.SOUL_SHARD.get();
+//                    itemSoulShard.fillItemCategory().forEach(output::accept);
+//                }));
+//
+//    }
 
     @SubscribeEvent
     public void setupClient(FMLClientSetupEvent event)

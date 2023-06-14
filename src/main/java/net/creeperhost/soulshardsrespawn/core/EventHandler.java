@@ -101,7 +101,7 @@ public class EventHandler
     {
         MultiblockPattern pattern = ConfigSoulShards.getMultiblock();
         ItemStack held = event.getEntity().getItemInHand(event.getHand());
-        if (!ItemStack.isSame(held, pattern.getCatalyst())) return;
+        if (!ItemStack.isSameItem(held, pattern.getCatalyst())) return;
 
         BlockState state = event.getLevel().getBlockState(event.getPos());
         if (!pattern.isOriginBlock(state)) return;

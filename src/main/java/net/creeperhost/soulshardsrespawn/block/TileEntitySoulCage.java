@@ -92,9 +92,9 @@ public class TileEntitySoulCage extends BlockEntity
                 double x = getBlockPos().getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D + 0.5D;
                 double y = getBlockPos().getY() + level.random.nextInt(3);
                 double z = getBlockPos().getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0D + 0.5D;
-                BlockPos spawnAt = new BlockPos(x, y, z);
+                BlockPos spawnAt = new BlockPos((int)x, (int)y, (int)z);
 
-                if (spawnAt.equals(getBlockPos())) spawnAt = new BlockPos(x, y + 1, z);
+                if (spawnAt.equals(getBlockPos())) spawnAt = new BlockPos((int)x, (int)y + 1, (int)z);
 
                 LivingEntity entityLiving = (LivingEntity) entityEntry.create(level);
                 if (entityLiving == null) continue;

@@ -15,20 +15,20 @@ description='''
 [[dependencies.soulshards]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[44.0,)" #mandatory
+    versionRange="[46.0,)" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.soulshards]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.3,)"
+    versionRange="[1.20,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.soulshards]]
     modId="polylib"
     mandatory=true
-    versionRange="[1903,)"
+    versionRange="[1200,)"
     ordering="NONE"
     side="BOTH"
