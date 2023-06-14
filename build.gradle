@@ -81,14 +81,15 @@ repositories {
         url "https://maven.architectury.dev/"
     }
 
-     maven {
-         name "JEI"
-         url "https://dvs1.progwml6.com/files/maven"
-     }
-//     maven {
-//         name "Hwyla"
-//         url 'https://maven.tehnut.info'
-//     }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
@@ -99,11 +100,11 @@ dependencies {
     // compileOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2:api')
     // runtimeOnly fg.deobf('mcp.mobius.waila:Hwyla:1.10.11-B78_1.16.2')
 
-
-//    compileOnly fg.deobf("mezz.jei:jei-1.19-common-api:${project.jei_version}")
-//    compileOnly fg.deobf("mezz.jei:jei-1.19-forge-api:${project.jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.19-forge:${project.jei_version}")
-
+    // compile against the JEI API but do not include it at runtime
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 }
 
 jar {
