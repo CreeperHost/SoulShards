@@ -1,14 +1,6 @@
 package net.creeperhost.soulshardsrespawn.core;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Map;
-import java.util.Set;
 
 public class ConfigSoulShards
 {
@@ -16,18 +8,16 @@ public class ConfigSoulShards
 
     private ConfigBalance balance;
     private ConfigClient client;
-    private ConfigEntityList entityList;
 
-    private ConfigSoulShards(ConfigBalance balance, ConfigClient client, ConfigEntityList entityList)
+    private ConfigSoulShards(ConfigBalance balance, ConfigClient client)
     {
         this.balance = balance;
         this.client = client;
-        this.entityList = entityList;
     }
 
     public ConfigSoulShards()
     {
-        this(new ConfigBalance(), new ConfigClient(), new ConfigEntityList());
+        this(new ConfigBalance(), new ConfigClient());
     }
 
     public ConfigBalance getBalance()
@@ -40,10 +30,6 @@ public class ConfigSoulShards
         return client;
     }
 
-    public ConfigEntityList getEntityList()
-    {
-        return entityList;
-    }
 
     public static void handleMultiblock()
     {
@@ -157,39 +143,6 @@ public class ConfigSoulShards
         public boolean displayDurabilityBar()
         {
             return displayDurabilityBar;
-        }
-    }
-
-    public static class ConfigEntityList
-    {
-        private static final Set<String> DEFAULT_DISABLES = Sets.newHashSet("minecraft:armor_stand", "minecraft:elder_guardian", "minecraft:ender_dragon", "minecraft:wither", "minecraft:wither", "minecraft:player");
-
-        private Map<String, Boolean> entities;
-
-        public ConfigEntityList(Map<String, Boolean> entities)
-        {
-            this.entities = entities;
-        }
-
-        public ConfigEntityList()
-        {
-            this(getDefaults());
-        }
-
-        public boolean isEnabled(ResourceLocation entityId)
-        {
-            return entities.getOrDefault(entityId.toString(), false);
-        }
-
-        private static Map<String, Boolean> getDefaults()
-        {
-            Map<String, Boolean> defaults = Maps.newHashMap();
-            ForgeRegistries.ENTITY_TYPES.getValues().stream().filter(e -> e.getCategory() != MobCategory.MISC).forEach(e ->
-            {
-                String entityId = ForgeRegistries.ENTITY_TYPES.getKey(e).toString();
-                defaults.put(entityId, !DEFAULT_DISABLES.contains(entityId));
-            });
-            return defaults;
         }
     }
 }

@@ -3,6 +3,7 @@ package net.creeperhost.soulshardsrespawn.core;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.BindingEvent;
 import net.creeperhost.soulshardsrespawn.api.ISoulWeapon;
+import net.creeperhost.soulshardsrespawn.api.SoulShardsAPI;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
@@ -42,7 +43,7 @@ public class EventHandler
             return;
 
         ResourceLocation resourceLocation = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
-        if (!SoulShards.CONFIG.getEntityList().isEnabled(resourceLocation)) return;
+        if (!SoulShardsAPI.isAllowed(resourceLocation)) return;
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !event.getEntity().canChangeDimensions()) return;
 

@@ -4,6 +4,7 @@ import net.creeperhost.polylib.items.helpers.IDamageBarHelper;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;
+import net.creeperhost.soulshardsrespawn.api.SoulShardsAPI;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
@@ -64,7 +65,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             try
             {
                 ResourceLocation entityId = ForgeRegistries.ENTITY_TYPES.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(), mobSpawner.getLevel().random, mobSpawner.getBlockPos()).getType());
-                if (!SoulShards.CONFIG.getEntityList().isEnabled(entityId)) return InteractionResult.PASS;
+                if (!SoulShardsAPI.isAllowed(binding.getBoundEntity())) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
                     return InteractionResult.FAIL;

@@ -3,6 +3,7 @@ package net.creeperhost.soulshardsrespawn.datagen;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.datagen.providers.SoulShardsLootProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -10,19 +11,22 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.concurrent.CompletableFuture;
+
 @Mod.EventBusSubscriber(modid = SoulShards.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SoulShardDataGen
 {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event)
     {
-        if(event.includeServer()) registerServerProviders(event.getGenerator());
+        if(event.includeServer()) registerServerProviders(event.getGenerator(), event.getLookupProvider(), event.getExistingFileHelper());
         if(event.includeClient()) registerClientProviders(event.getGenerator(), event.getExistingFileHelper());
     }
 
-    public static void registerServerProviders(DataGenerator generator)
+    public static void registerServerProviders(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper)
     {
         generator.addProvider(true, new SoulShardsLootProvider(generator.getPackOutput()));
+        generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
     }
 
     public static void registerClientProviders(DataGenerator generator, ExistingFileHelper existingFileHelper)

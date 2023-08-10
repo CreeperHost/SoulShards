@@ -3,6 +3,7 @@ package net.creeperhost.soulshardsrespawn.block;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.CageSpawnEvent;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
+import net.creeperhost.soulshardsrespawn.api.SoulShardsAPI;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
@@ -142,7 +143,7 @@ public class TileEntitySoulCage extends BlockEntity
         if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline())
             return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
 
-        if (!SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
+        if (!SoulShardsAPI.isAllowed(binding.getBoundEntity()))
             return new InteractionResultHolder<>(InteractionResult.FAIL, binding);
 
         if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal())
@@ -251,7 +252,7 @@ public class TileEntitySoulCage extends BlockEntity
             if (!(stack.getItem() instanceof ItemSoulShard)) return stack;
 
             Binding binding = ((ItemSoulShard) stack.getItem()).getBinding(stack);
-            if (binding == null || binding.getBoundEntity() == null || !SoulShards.CONFIG.getEntityList().isEnabled(binding.getBoundEntity()))
+            if (binding == null || binding.getBoundEntity() == null || !SoulShardsAPI.isAllowed(binding.getBoundEntity()))
                 return stack;
 
             return super.insertItem(slot, stack, simulate);
