@@ -7,7 +7,7 @@
   ],
   "type": "enderio:enchanting",
   "amount": 1,
-  "cost_multiplier": 16,
+  "cost_multiplier": 1,
   "enchantment": "soulshards:soul_stealer",
   "input": {
     "item": "soulshards:corrupted_ingot"
