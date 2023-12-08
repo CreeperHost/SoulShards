@@ -32,7 +32,7 @@ public class MultiBlockDrawable implements IDrawable
     public void draw(PoseStack ms, int xOffset, int yOffset)
     {
         ms.pushPose();
-        ms.translate(0, 0, -50);
+        ms.translate(0, 0, 100);
         cornerBlock.draw(ms, xOffset + 13, yOffset + 1);
 
         ms.translate(0, 0, 5);

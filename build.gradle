@@ -80,11 +80,13 @@ repositories {
         name "Architectury"
         url "https://maven.architectury.dev/"
     }
-
-     maven {
-         name "JEI"
-         url "https://dvs1.progwml6.com/files/maven"
-     }
+    maven {
+        name "JEI"
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url "https://cursemaven.com"
+    }
 //     maven {
 //         name "Hwyla"
 //         url 'https://maven.tehnut.info'
@@ -104,6 +106,12 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${project.mc_version}-common-api:${project.jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${project.mc_version}-forge-api:${project.jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${project.mc_version}-forge:${project.jei_version}")
+
+    //REI Testing
+//    runtimeOnly fg.deobf("curse.maven:cloth-config-348521:4633416")
+//    runtimeOnly fg.deobf("curse.maven:roughly-enough-items-310111:4812888")
+//    runtimeOnly fg.deobf("curse.maven:roughly-enough-items-hacks-521393:4837440")
+
 }
 
 jar {
