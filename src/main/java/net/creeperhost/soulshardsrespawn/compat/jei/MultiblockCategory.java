@@ -83,9 +83,9 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
 
         arrowRight.draw(guiGraphics, 60, 30);
         Font font = Minecraft.getInstance().font;
-        guiGraphics.drawString(font, "Right-click on the top", 2, 70, 0);
-        guiGraphics.drawString(font, "of the " + ChatFormatting.DARK_PURPLE + "Glowstone Block", 2, 80, 0);
-        guiGraphics.drawString(font, "with a " + ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString() + ChatFormatting.BLACK + " in hand", 2, 90, 0);
+        guiGraphics.drawString(font, "Right-click on the top", 2, 70, 0, false);
+        guiGraphics.drawString(font, "of the " + ChatFormatting.DARK_PURPLE + "Glowstone Block", 2, 80, 0, false);
+        guiGraphics.drawString(font, "with a " + ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString() + ChatFormatting.BLACK + " in hand", 2, 90, 0, false);
 
         RenderSystem.disableBlend();
     }
