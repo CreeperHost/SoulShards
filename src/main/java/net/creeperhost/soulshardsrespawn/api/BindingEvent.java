@@ -2,8 +2,7 @@ package net.creeperhost.soulshardsrespawn.api;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +27,6 @@ public class BindingEvent extends Event
         return entity;
     }
 
-    @Cancelable
     public static class NewBinding extends BindingEvent
     {
         public NewBinding(LivingEntity entity, IBinding binding)

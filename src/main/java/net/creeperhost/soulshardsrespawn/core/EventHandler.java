@@ -9,8 +9,8 @@ import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,17 +18,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class EventHandler
         if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getEntity() instanceof FakePlayer)
             return;
 
-        ResourceLocation resourceLocation = ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType());
+        ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
         if (!SoulShardsAPI.isAllowed(resourceLocation)) return;
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().getType().is(Tags.EntityTypes.BOSSES)) return;
@@ -56,8 +55,8 @@ public class EventHandler
         {
 
             BindingEvent.GetEntityName getEntityName = new BindingEvent.GetEntityName(event.getEntity());
-            MinecraftForge.EVENT_BUS.post(getEntityName);
-            ResourceLocation entityId = getEntityName.getEntityId() == null ? ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType()) : getEntityName.getEntityId();
+            NeoForge.EVENT_BUS.post(getEntityName);
+            ResourceLocation entityId = getEntityName.getEntityId() == null ? BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType()) : getEntityName.getEntityId();
 
             ItemStack shardItem = getFirstShard(player, entityId);
             if (shardItem.isEmpty()) return;
@@ -68,7 +67,7 @@ public class EventHandler
             if (binding == null)
             {
                 BindingEvent.NewBinding newBinding = new BindingEvent.NewBinding(event.getEntity(), new Binding(null, 0));
-                if (MinecraftForge.EVENT_BUS.post(newBinding)) return;
+                if (NeoForge.EVENT_BUS.post(newBinding).hasResult()) return;
 
                 if (shardItem.getCount() > 1)
                 { // Peel off one blank shard from a stack of them
@@ -87,7 +86,7 @@ public class EventHandler
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, event.getEntity());
 
             BindingEvent.GainSouls gainSouls = new BindingEvent.GainSouls(event.getEntity(), binding, soulsGained);
-            MinecraftForge.EVENT_BUS.post(gainSouls);
+            NeoForge.EVENT_BUS.post(gainSouls);
 
             if (binding.getBoundEntity() == null) binding.setBoundEntity(entityId);
 

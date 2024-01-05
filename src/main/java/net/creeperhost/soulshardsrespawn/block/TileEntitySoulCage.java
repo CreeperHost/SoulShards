@@ -9,6 +9,7 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,13 +22,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +78,7 @@ public class TileEntitySoulCage extends BlockEntity
         Binding binding = getBinding();
         if (binding == null || binding.getBoundEntity() == null) return;
 
-        EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
+        EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
         if (entityEntry == null) return;
 
         IShardTier tier = binding.getTier();
@@ -111,7 +107,7 @@ public class TileEntitySoulCage extends BlockEntity
                         continue;
 
                     CageSpawnEvent event = new CageSpawnEvent(binding, inventory.getStackInSlot(0), entityLiving);
-                    if (MinecraftForge.EVENT_BUS.post(event)) continue;
+                    if (NeoForge.EVENT_BUS.post(event).hasResult()) continue;
 
                     level.addFreshEntity(entityLiving);
                     if (entityLiving instanceof Mob)
@@ -201,21 +197,21 @@ public class TileEntitySoulCage extends BlockEntity
         tag.putBoolean("active", active);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side)
-    {
-        if (cap != ForgeCapabilities.ITEM_HANDLER) return LazyOptional.empty();
+//    @Nonnull
+//    @Override
+//    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side)
+//    {
+//        if (cap != ForgeCapabilities.ITEM_HANDLER) return LazyOptional.empty();
+//
+//        return LazyOptional.of(() -> inventory).cast();
+//    }
 
-        return LazyOptional.of(() -> inventory).cast();
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap)
-    {
-        return super.getCapability(cap);
-    }
+//    @NotNull
+//    @Override
+//    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap)
+//    {
+//        return super.getCapability(cap);
+//    }
 
     public ItemStackHandler getInventory()
     {

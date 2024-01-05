@@ -1,10 +1,10 @@
 package net.creeperhost.soulshardsrespawn.api;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class SoulShardsAPI
 {
@@ -12,7 +12,7 @@ public class SoulShardsAPI
 
     public static boolean isAllowed(ResourceLocation resourceLocation)
     {
-        EntityType<?> entityEntry = ForgeRegistries.ENTITY_TYPES.getValue(resourceLocation);
+        EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(resourceLocation);
         if(entityEntry == null) return false;
         if(entityEntry.is(SOULSHARDS_DENYLIST)) return false;
         return true;

@@ -13,6 +13,8 @@
 /.settings/
 /libs/
 /src/generated/resources/.cache/
+run-data
+runs/
 
 # File Extensions
 *.psd
