@@ -2,6 +2,7 @@ package net.creeperhost.soulshardsrespawn.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.creeperhost.soulshardsrespawn.block.SoulSpawnerLogic;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.minecraft.client.Minecraft;
@@ -25,25 +26,29 @@ public class RenderTileSoulCage implements BlockEntityRenderer<TileEntitySoulCag
     }
 
     @Override
-    public void render(TileEntitySoulCage tile, float partialTicks, PoseStack mStack, MultiBufferSource getter, int packedLight, int packedOverlay) {
-        Entity entity = tile.getRenderEntity();
-        if (entity == null) return;
+    public void render(TileEntitySoulCage tile, float partialTicks, PoseStack stack, MultiBufferSource buffers, int packedLight, int packedOverlay) {
+        SoulSpawnerLogic spawnerLogic = tile.spawnerLogic;
+        stack.pushPose();
+        stack.translate(0.5D, 0.0D, 0.5D);
+        Entity entity = spawnerLogic.getOrCreateDisplayEntity(tile.getLevel());
+        if (entity != null) {
+            float f = 0.53125F;
+            float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
+            if ((double) f1 > 1.0D) {
+                f /= f1;
+            }
 
-        mStack.pushPose();
-        mStack.translate(0.5D, 0.0D, 0.5D);
-
-        float f = 0.53125F;
-        float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
-        if ((double) f1 > 1.0D) {
-            f /= f1;
+            stack.translate(0.0D, 0.4F, 0.0D);
+            stack.mulPose(Vector3f.YP.rotationDegrees((float) Mth.lerp(partialTicks, spawnerLogic.getoSpin(), spawnerLogic.getSpin()) * 10.0F));
+            stack.translate(0.0D, -0.2F, 0.0D);
+            stack.mulPose(Vector3f.XP.rotationDegrees(-30.0F));
+            stack.scale(f, f, f);
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, stack, buffers, packedLight);
         }
+        stack.popPose();
 
-        mStack.translate(0.0D, (double) 0.4F, 0.0D);
-        mStack.mulPose(Vector3f.YP.rotationDegrees((float) Mth.lerp((double) partialTicks, tile.lastRotation, tile.rotation) * 10.0F));
-        mStack.translate(0.0D, (double) -0.2F, 0.0D);
-        mStack.mulPose(Vector3f.XP.rotationDegrees(-30.0F));
-        mStack.scale(f, f, f);
-        Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, mStack, getter, packedLight);
-        mStack.popPose();
+        stack.translate(0.5, 1F-(1F/32F), 0.5);
+        stack.scale(0.75F, 0.75F, 0.75F);
+        stack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
     }
 }

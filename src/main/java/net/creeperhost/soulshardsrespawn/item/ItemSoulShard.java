@@ -91,7 +91,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             {
                 ItemHandlerHelper.insertItem(itemHandler, stack.copy(), false);
                 cage.setChanged();//markDirty();
-                cage.setState(true);
+                cage.setActive(true);
                 context.getPlayer().setItemInHand(context.getHand(), ItemStack.EMPTY);
                 return InteractionResult.SUCCESS;
             }
