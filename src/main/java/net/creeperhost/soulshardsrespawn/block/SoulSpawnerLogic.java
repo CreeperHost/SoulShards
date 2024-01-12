@@ -59,7 +59,13 @@ public class SoulSpawnerLogic extends BaseSpawner {
             }
 
             this.prevMobRotation = this.mobRotation;
-            this.mobRotation = (this.mobRotation + (double) (1000.0F / ((float) tile.spawnDelay + 200.0F))) % 360.0D;
+            Binding binding = tile.getBinding();
+            if (binding != null) {
+                double progress = 1F - (tile.spawnDelay / (double) binding.getTier().getCooldown());
+                this.mobRotation = (this.mobRotation + (progress * 4.5D) + 0.5D) % 360.0D;
+            } else {
+                this.mobRotation = (this.mobRotation + (double) (1000.0F / ((float) tile.spawnDelay + 200.0F))) % 360.0D;
+            }
         }
     }
 
@@ -181,13 +187,13 @@ public class SoulSpawnerLogic extends BaseSpawner {
         return !(entityLiving instanceof Mob) || light;
     }
 
-    @OnlyIn (Dist.CLIENT)
-    public Entity getRenderEntity() {
+    @Nullable
+    @Override
+    public Entity getOrCreateDisplayEntity(Level level, RandomSource random, BlockPos pos) {
         if (tile.getBinding() == null) return null;
         ResourceLocation key = tile.getBinding().getBoundEntity();
         if (key == null) return null;
         return RENDER_ENTITY_CACHE.computeIfAbsent(key, name -> {
-            Level level = Minecraft.getInstance().level;
             EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(name);
             if (type == null) return EntityType.PIG.create(level);
             Entity entity = type.create(level);

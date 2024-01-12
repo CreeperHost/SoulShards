@@ -39,7 +39,7 @@ public class TileEntitySoulCage extends BlockEntity {
     private boolean active = false;
     public int spawnDelay = -1;
 
-    private SoulSpawnerLogic spawnerLogic = new SoulSpawnerLogic(this);
+    public SoulSpawnerLogic spawnerLogic = new SoulSpawnerLogic(this);
     private Binding binding = null;
 
     public TileEntitySoulCage(BlockPos blockPos, BlockState blockState) {
@@ -54,8 +54,8 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     public void tick() {
+        updateBinding();
         if (level instanceof ServerLevel) {
-            updateBinding();
             boolean newState = canSpawn();
             if (newState != active) {
                 setActive(newState);
@@ -100,7 +100,7 @@ public class TileEntitySoulCage extends BlockEntity {
     protected void resetTimer() {
         if (binding == null) spawnDelay = -1;
         else spawnDelay = binding.getTier().getCooldown();
-        level.neighborChanged(getBlockPos(), getBlockState().getBlock(), getBlockPos());
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
     }
 
     public void setActive(boolean active) {
@@ -136,6 +136,7 @@ public class TileEntitySoulCage extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
+        tag.put("inventory", inventory.serializeNBT());
         tag.putShort("spawnDelay", (short) spawnDelay);
         tag.putBoolean("active", active);
         return tag;
@@ -145,6 +146,7 @@ public class TileEntitySoulCage extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         CompoundTag tag = pkt.getTag();
         if (tag == null) return;
+        this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.spawnDelay = tag.getShort("spawnDelay");
         this.active = tag.getBoolean("active");
     }
