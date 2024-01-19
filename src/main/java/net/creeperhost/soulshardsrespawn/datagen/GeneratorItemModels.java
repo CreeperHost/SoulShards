@@ -2,13 +2,13 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class GeneratorItemModels extends ItemModelProvider
@@ -39,12 +39,12 @@ public class GeneratorItemModels extends ItemModelProvider
 
     public String getPath(Item item)
     {
-        return ForgeRegistries.ITEMS.getKey(item).getPath();
+        return BuiltInRegistries.ITEM.getKey(item).getPath();
     }
 
     private void registerBlockModel(Block block)
     {
-        String path = ForgeRegistries.BLOCKS.getKey(block).getPath();
+        String path = BuiltInRegistries.BLOCK.getKey(block).getPath();
         getBuilder(path).parent(new ModelFile.UncheckedModelFile(modLoc("block/" + path)));
     }
 

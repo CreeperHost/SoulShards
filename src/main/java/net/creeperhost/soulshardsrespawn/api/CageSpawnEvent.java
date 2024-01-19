@@ -1,12 +1,13 @@
 package net.creeperhost.soulshardsrespawn.api;
 
+import dev.architectury.annotations.ForgeEventCancellable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-@Cancelable
-public class CageSpawnEvent extends Event
+@ForgeEventCancellable
+public class CageSpawnEvent extends Event implements ICancellableEvent
 {
     private final IBinding shardBinding;
     private final ItemStack shardStack;

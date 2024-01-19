@@ -4,9 +4,9 @@ import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.CageSpawnEvent;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -15,11 +15,10 @@ import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -88,7 +87,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
         Binding binding = tile.getBinding();
         IShardTier tier = binding.getTier();
 
-        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(binding.getBoundEntity());
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
         if (type == null) {
             resetTimer();
             return;
@@ -152,7 +151,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
         }
 
         CageSpawnEvent cageEvent = new CageSpawnEvent(binding, tile.getInventory().getStackInSlot(0), entity);
-        if (MinecraftForge.EVENT_BUS.post(cageEvent)) {
+        if (NeoForge.EVENT_BUS.post(cageEvent).isCanceled()) {
             return false;
         }
 
@@ -161,7 +160,8 @@ public class SoulSpawnerLogic extends BaseSpawner {
                 return false;
             }
 
-            var finalizeEvent = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), null, null, this);
+
+            var finalizeEvent = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), null, null, this);
             if (finalizeEvent != null) {
                 mob.finalizeSpawn(level, finalizeEvent.getDifficulty(), finalizeEvent.getSpawnType(), finalizeEvent.getSpawnData(), finalizeEvent.getSpawnTag());
             }
@@ -194,7 +194,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
         ResourceLocation key = tile.getBinding().getBoundEntity();
         if (key == null) return null;
         return RENDER_ENTITY_CACHE.computeIfAbsent(key, name -> {
-            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(name);
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(name);
             if (type == null) return EntityType.PIG.create(level);
             Entity entity = type.create(level);
             if (entity == null) return EntityType.PIG.create(level);

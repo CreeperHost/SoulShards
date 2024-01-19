@@ -4,26 +4,18 @@ import com.google.gson.reflect.TypeToken;
 import net.creeperhost.soulshardsrespawn.client.ClientInit;
 import net.creeperhost.soulshardsrespawn.core.ConfigSoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
-import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.File;
 
-@Mod(SoulShards.MODID)
+@Mod (SoulShards.MODID)
 public class SoulShards
 {
     public static final String MODID = "soulshards";

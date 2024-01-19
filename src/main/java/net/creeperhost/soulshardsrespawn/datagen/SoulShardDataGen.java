@@ -5,11 +5,11 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.datagen.providers.SoulShardsLootProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -82,6 +82,9 @@ public class SoulShardDataGen
 
             add("enchantment.soulshards.soul_stealer.desc", "Increases the souls collected per kill by one per level.");
             add("jei.soulshards.soul_shard.desc", "A vessel for the Souls of the slain.\\n\\nObtained by creating a structure in the world and using a %s on the origin block.");
+            add("jei.soulshards.soul_shard.title", "Soul Shard Crafting");
+            add("jei.soulshards.soul_shard.creation", "Right-click on the top\nof the §5Glowstone Block§r\nwith a %s in hand");
+            add("jei.soulshards.soul_shard.multiblock", "4x Obsidian\n4x Block of Quartz\n1x Glowstone");
         }
     }
 }

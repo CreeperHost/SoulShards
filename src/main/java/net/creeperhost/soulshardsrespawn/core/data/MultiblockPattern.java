@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
 import java.lang.reflect.Type;
@@ -126,7 +126,8 @@ public class MultiblockPattern
             JsonObject json = element.getAsJsonObject();
 
             ResourceLocation itemId = new ResourceLocation(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
-            ItemStack catalyst = new ItemStack(ForgeRegistries.ITEMS.getValue(itemId), 1);
+
+            ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.get(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
             Point origin = context.deserialize(json.getAsJsonObject("origin"), Point.class);
@@ -152,7 +153,7 @@ public class MultiblockPattern
                     String[] split = state.split("\\[");
                     split[1] = split[1].substring(0, split[1].lastIndexOf("]")); // Make sure brackets are removed from state
 
-                    Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0]));
+                    Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(split[0]));
                     if (block == Blocks.AIR) return Collections.singleton(block.defaultBlockState());
 
                     StateDefinition<Block, BlockState> blockState = block.getStateDefinition();
@@ -171,7 +172,7 @@ public class MultiblockPattern
                 }
                 else
                 {
-                    states.addAll(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(state)).getStateDefinition().getPossibleStates());
+                    states.addAll(BuiltInRegistries.BLOCK.get(new ResourceLocation(state)).getStateDefinition().getPossibleStates());
                 }
             }
 
