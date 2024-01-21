@@ -3,8 +3,9 @@ package net.creeperhost.soulshardsrespawn.api;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-public class CageSpawnEvent extends Event
+public class CageSpawnEvent extends Event implements ICancellableEvent
 {
     private final IBinding shardBinding;
     private final ItemStack shardStack;

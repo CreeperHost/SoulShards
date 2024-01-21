@@ -59,7 +59,7 @@ public class SoulShardDataGen
             add("tooltip.soulshards.bound", "Bound to: %s");
             add("tooltip.soulshards.kills", "Souls: %d");
             add("tooltip.soulshards.tier", "Tier: %d");
-            add("tooltip.soulshards.owne", "Owner: %s");
+            add("tooltip.soulshards.owner", "Owner: %s");
             add("tooltip.soulshards.cage_born", "Cage Born");
 
             add("enchantment.soulshards.soul_stealer", "Soul Stealer");

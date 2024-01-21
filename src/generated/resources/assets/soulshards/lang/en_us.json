@@ -1,8 +1,8 @@
 {
   "block.soulshards.soul_cage": "Soul Cage",
-  "chat.soulshards.absorb_disabled": "Â§cThe shard seems to refuse the trapped soul...",
-  "chat.soulshards.command_killed": "Â§2Killed Â§2%d Â§2entities",
-  "chat.soulshards.command_not_found": "Â§cDid not find any spawned entities",
+  "chat.soulshards.absorb_disabled": "§cThe shard seems to refuse the trapped soul...",
+  "chat.soulshards.command_killed": "§2Killed §2%d §2entities",
+  "chat.soulshards.command_not_found": "§cDid not find any spawned entities",
   "commands.soulshards.error.not_a_entity": "%s is invalid or not registered.",
   "commands.soulshards.error.not_a_shard": "Held item is not a Soul Shard.",
   "commands.soulshards.kill_all.success": "Killed %d cage born entities.",
@@ -27,6 +27,6 @@
   "tooltip.soulshards.bound": "Bound to: %s",
   "tooltip.soulshards.cage_born": "Cage Born",
   "tooltip.soulshards.kills": "Souls: %d",
-  "tooltip.soulshards.owne": "Owner: %s",
+  "tooltip.soulshards.owner": "Owner: %s",
   "tooltip.soulshards.tier": "Tier: %d"
 }
