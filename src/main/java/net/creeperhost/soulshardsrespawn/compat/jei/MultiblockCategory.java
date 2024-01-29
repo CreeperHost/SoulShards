@@ -1,8 +1,6 @@
 package net.creeperhost.soulshardsrespawn.compat.jei;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,6 +18,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Recipe>
 {
-    public static final Component TITLE = Component.literal("Soul Shard Crafting");
+    public static final Component TITLE = Component.translatable("jei.soulshards.soul_shard.title");
 
     public static final RecipeType<MultiblockCategory.Recipe> SOUL_SHARD_CRAFTING =
             RecipeType.create(SoulShards.MODID, "soulshardcrafting", MultiblockCategory.Recipe.class);
@@ -83,10 +82,12 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
 
         arrowRight.draw(guiGraphics, 60, 30);
         Font font = Minecraft.getInstance().font;
-        guiGraphics.drawString(font, "Right-click on the top", 2, 70, 0, false);
-        guiGraphics.drawString(font, "of the " + ChatFormatting.DARK_PURPLE + "Glowstone Block", 2, 80, 0, false);
-        guiGraphics.drawString(font, "with a " + ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString() + ChatFormatting.BLACK + " in hand", 2, 90, 0, false);
-
+        List<FormattedCharSequence> craftLabel = font.split(Component.translatable("jei.soulshards.soul_shard.creation", ChatFormatting.DARK_PURPLE + recipe.getInput().getHoverName().getString() + ChatFormatting.RESET), 200);
+        int y = 70;
+        for (FormattedCharSequence line : craftLabel) {
+            guiGraphics.drawString(font, line, 2, y, 0, false);
+            y += 10;
+        }
         RenderSystem.disableBlend();
     }
 
