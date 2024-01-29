@@ -82,6 +82,9 @@ public class SoulShardDataGen
 
             add("enchantment.soulshards.soul_stealer.desc", "Increases the souls collected per kill by one per level.");
             add("jei.soulshards.soul_shard.desc", "A vessel for the Souls of the slain.\\n\\nObtained by creating a structure in the world and using a %s on the origin block.");
+            add("jei.soulshards.soul_shard.title", "Soul Shard Crafting");
+            add("jei.soulshards.soul_shard.creation", "Right-click on the top\nof the §5Glowstone Block§r\nwith a %s in hand");
+            add("jei.soulshards.soul_shard.multiblock", "4x Obsidian\n4x Block of Quartz\n1x Glowstone");
         }
     }
 }
