@@ -13,9 +13,12 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collections;
@@ -66,18 +69,16 @@ public class MultiblockCategory implements DisplayCategory<MultiblockDisplay> {
 
         widgets.add(Widgets.createArrow(new Point(pos.x + 60, pos.y + 30)));
 
-        widgets.add(Widgets.createLabel(new Point(bounds.x + (bounds.width / 2), pos.y + 70), Component.literal("Right-click on the top"))
-                .noShadow()
-                .color(0)
-        );
-        widgets.add(Widgets.createLabel(new Point(bounds.x + (bounds.width / 2), pos.y + 80), Component.literal("of the " + ChatFormatting.DARK_PURPLE + "Glowstone Block"))
-                .noShadow()
-                .color(0)
-        );
-        widgets.add(Widgets.createLabel(new Point(bounds.x + (bounds.width / 2), pos.y + 90), Component.literal("with a " + ChatFormatting.DARK_PURPLE + display.getInputEntries().get(0).get(0).asFormattedText().getString() + ChatFormatting.RESET + " in hand"))
-                .noShadow()
-                .color(0)
-        );
+        List<FormattedText> craftLabel = Minecraft.getInstance().font.getSplitter().splitLines(Component.translatable("jei.soulshards.soul_shard.creation", ChatFormatting.DARK_PURPLE + display.getInputEntries().get(0).get(0).asFormattedText().getString() + ChatFormatting.RESET), bounds.width, Style.EMPTY);
+
+        int y = 70;
+        for (FormattedText line : craftLabel) {
+            widgets.add(Widgets.createLabel(new Point(bounds.x + (bounds.width / 2), pos.y + y), Component.literal(line.getString()))
+                    .noShadow()
+                    .color(0)
+            );
+            y += 10;
+        }
 
         pos.x += 10;
         pos.y += 30;
