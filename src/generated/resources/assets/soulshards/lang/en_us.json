@@ -14,6 +14,8 @@
   "commands.soulshards.set_owner.success": "Set owner of held shard to %s.",
   "commands.soulshards.set_owner.usage": "/soulshards setOwner [owner]",
   "commands.soulshards.usage": "/soulshards [setEnt|setKills|setOwner|killall]",
+  "config.jade.plugin_soulshards.cage_data": "Soul Cage Data",
+  "config.jade.plugin_soulshards.entity_data": "Soul Cage Entity",
   "enchantment.soulshards.soul_stealer": "Soul Stealer",
   "enchantment.soulshards.soul_stealer.desc": "Increases the souls collected per kill by one per level.",
   "item.soulshards.corrupted_essence": "Corrupted Essence",

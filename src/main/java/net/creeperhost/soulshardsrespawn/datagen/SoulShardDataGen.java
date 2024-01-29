@@ -85,6 +85,9 @@ public class SoulShardDataGen
             add("jei.soulshards.soul_shard.title", "Soul Shard Crafting");
             add("jei.soulshards.soul_shard.creation", "Right-click on the top\nof the §5Glowstone Block§r\nwith a %s in hand");
             add("jei.soulshards.soul_shard.multiblock", "4x Obsidian\n4x Block of Quartz\n1x Glowstone");
+
+            add("config.jade.plugin_soulshards.cage_data", "Soul Cage Data");
+            add("config.jade.plugin_soulshards.entity_data", "Soul Cage Entity");
         }
     }
 }
