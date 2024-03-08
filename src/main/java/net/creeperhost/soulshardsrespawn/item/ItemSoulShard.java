@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemSoulShard extends Item implements ISoulShard//, IDamageBarHelper
+public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 {
     public ItemSoulShard()
     {
@@ -142,7 +142,6 @@ public class ItemSoulShard extends Item implements ISoulShard//, IDamageBarHelpe
         return binding != null && binding.getKills() >= Tier.maxKills;
     }
 
-
     @Override
     public int getMaxStackSize(ItemStack stack)
     {
@@ -156,26 +155,26 @@ public class ItemSoulShard extends Item implements ISoulShard//, IDamageBarHelpe
         return SoulShards.CONFIG.getClient().displayDurabilityBar() && binding != null && binding.getKills() < Tier.maxKills;
     }
 
-//    @Override
-//    public float getWidthForBar(ItemStack stack)
-//    {
-//        Binding binding = getBinding(stack);
-//        if (binding == null) return 1;
-//
-//        return 1F - ((float) binding.getKills() / (float) Tier.maxKills);
-//    }
-//
-//    @Override
-//    public int getBarWidth(@Nonnull ItemStack stack)
-//    {
-//        return this.getScaledBarWidth(stack);
-//    }
-//
-//    @Override
-//    public int getBarColor(@Nonnull ItemStack stack)
-//    {
-//        return this.getColorForBar(stack);
-//    }
+    @Override
+    public float getWidthForBar(ItemStack stack)
+    {
+        Binding binding = getBinding(stack);
+        if (binding == null) return 1;
+
+        return 1F - ((float) binding.getKills() / (float) Tier.maxKills);
+    }
+
+    @Override
+    public int getBarWidth(@Nonnull ItemStack stack)
+    {
+        return this.getScaledBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(@Nonnull ItemStack stack)
+    {
+        return this.getColorForBar(stack);
+    }
 
     @Nullable
     @Override

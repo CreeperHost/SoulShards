@@ -104,7 +104,7 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    implementation "curse.maven:jade-324717:4980188"
+    implementation "curse.maven:jade-324717:5109393"
 
 }
 
