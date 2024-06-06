@@ -179,7 +179,7 @@ public class ConfigSoulShards
 
         public boolean isEnabled(ResourceLocation entityId)
         {
-            return entities.getOrDefault(entityId.toString(), false);
+            return entities.getOrDefault(entityId.toString(), true);
         }
 
         private static Map<String, Boolean> getDefaults()
