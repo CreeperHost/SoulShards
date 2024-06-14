@@ -7,6 +7,11 @@ import net.creeperhost.soulshardsrespawn.core.ConfigSoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
@@ -18,6 +23,7 @@ public class SoulShards
 {
     public static final String MODID = "soulshards";
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(FMLPaths.CONFIGDIR.get().toFile(), MODID + "/" + MODID + ".json"), new ConfigSoulShards());
+    public static final ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(MODID, "soul_stealer"));
 
     public SoulShards(IEventBus eventBus)
     {
