@@ -1,6 +1,7 @@
 package net.creeperhost.soulshardsrespawn.item;
 
 import net.creeperhost.polylib.items.helpers.IDamageBarHelper;
+import net.creeperhost.soulshardsrespawn.SSDataComponentType;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
 import net.creeperhost.soulshardsrespawn.api.ISoulShard;
@@ -124,7 +125,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             if (entityEntry != null)
             {
                 ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);
-                tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation));
+                tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation.toString()));
             }
         }
 
@@ -184,8 +185,8 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
     public void updateBinding(ItemStack stack, Binding binding)
     {
-        //TODO
-//        if (!stack.hasTag()) stack.setTag(new CompoundTag());
-//        stack.getTag().put("binding", binding.serializeNBT());
+        stack.set(SSDataComponentType.BOUND_ENTITY, binding.getBoundEntity().toString());
+        stack.set(SSDataComponentType.OWNER, binding.getOwner().toString());
+        stack.set(SSDataComponentType.KILLS, binding.getKills());
     }
 }

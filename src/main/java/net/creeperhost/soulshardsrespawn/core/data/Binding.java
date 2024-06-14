@@ -1,18 +1,15 @@
 package net.creeperhost.soulshardsrespawn.core.data;
 
+import net.creeperhost.soulshardsrespawn.SSDataComponentType;
 import net.creeperhost.soulshardsrespawn.api.IBinding;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Binding implements IBinding, INBTSerializable<CompoundTag>
+public class Binding implements IBinding
 {
     @Nullable
     private ResourceLocation boundEntity;
@@ -31,12 +28,6 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag>
     {
         this(boundEntity, null, kills);
     }
-
-    //TODO
-//    public Binding(CompoundTag bindingTag)
-//    {
-//        deserializeNBT(bindingTag);
-//    }
 
     @Nullable
     @Override
@@ -92,31 +83,14 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag>
     @Nullable
     public static Binding fromNBT(ItemStack stack)
     {
-        //TODO
-//        if (!stack.hasTag()) return null;
-//
-//        CompoundTag tag = stack.getTag();
-//        if (!tag.contains("binding")) return null;
-//
-//        return new Binding(tag.getCompound("binding"));
+        if(stack.has(SSDataComponentType.BOUND_ENTITY) && stack.has(SSDataComponentType.OWNER) && stack.has(SSDataComponentType.KILLS))
+        {
+            ResourceLocation boundEntity = ResourceLocation.parse(stack.get(SSDataComponentType.BOUND_ENTITY));
+            UUID owner = UUID.fromString(stack.get(SSDataComponentType.OWNER));
+            int kills = stack.get(SSDataComponentType.KILLS);
+            return new Binding(boundEntity, owner, kills);
+        }
 
         return null;
-    }
-
-    @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-
-        if (boundEntity != null) tag.putString("bound", boundEntity.toString());
-        if (owner != null) tag.putUUID("owner", owner);
-        tag.putInt("kills", kills);
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt.contains("bound")) this.boundEntity = ResourceLocation.parse(nbt.getString("bound"));
-        if (nbt.hasUUID("owner")) this.owner = nbt.getUUID("owner");
-        this.kills = nbt.getInt("kills");
     }
 }

@@ -25,6 +25,7 @@ public class SoulShards
         RegistrarSoulShards.ITEMS.register(eventBus);
         RegistrarSoulShards.BLOCKS.register(eventBus);
         RegistrarSoulShards.TILES_ENTITIES.register(eventBus);
+        SSDataComponentType.COMPONENTS.register(eventBus);
 //        RegistrarSoulShards.ENCHANTMENTS.register(eventBus);
         RegistrarSoulShards.CREATIVE_TAB.register(eventBus);
         if(Platform.getEnv().isClient())

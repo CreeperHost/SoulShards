@@ -7,10 +7,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
@@ -24,11 +21,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
 
     public ItemVileSword()
     {
-        super(MATERIAL_VILE, new Properties().component(DataComponents.TOOL, createToolProperties()));
-    }
-
-    public static Tool createToolProperties() {
-        return new Tool(List.of(Tool.Rule.minesAndDrops(List.of(Blocks.COBWEB), 15.0F), Tool.Rule.overrideSpeed(BlockTags.SWORD_EFFICIENT, 1.5F)), 1.0F, 2);
+        super(MATERIAL_VILE, new Item.Properties().attributes(SwordItem.createAttributes(MATERIAL_VILE, 3, -2.4F)));
     }
 
     @Override
