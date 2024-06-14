@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EntityType;
 
 public class SoulShardsAPI
 {
-    public static final TagKey<EntityType<?>> SOULSHARDS_DENYLIST = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation("soulshards", "no_capture"));
+    public static final TagKey<EntityType<?>> SOULSHARDS_DENYLIST = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("soulshards", "no_capture"));
 
     public static boolean isAllowed(ResourceLocation resourceLocation)
     {

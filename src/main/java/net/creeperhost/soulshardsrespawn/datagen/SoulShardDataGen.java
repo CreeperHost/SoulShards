@@ -6,6 +6,7 @@ import net.creeperhost.soulshardsrespawn.datagen.providers.SoulShardsLootProvide
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -13,7 +14,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = SoulShards.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SoulShards.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class SoulShardDataGen
 {
     @SubscribeEvent
@@ -25,7 +26,7 @@ public class SoulShardDataGen
 
     public static void registerServerProviders(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper)
     {
-        generator.addProvider(true, new SoulShardsLootProvider(generator.getPackOutput()));
+        generator.addProvider(true, new SoulShardsLootProvider(generator.getPackOutput(), lookupProvider));
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
     }
 

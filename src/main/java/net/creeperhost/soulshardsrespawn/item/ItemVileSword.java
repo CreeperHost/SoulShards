@@ -2,13 +2,21 @@ package net.creeperhost.soulshardsrespawn.item;
 
 import net.creeperhost.soulshardsrespawn.api.ISoulWeapon;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+
+import java.util.List;
 
 public class ItemVileSword extends SwordItem implements ISoulWeapon
 {
@@ -16,7 +24,11 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
 
     public ItemVileSword()
     {
-        super(MATERIAL_VILE, 3, -2.4F, new Properties());
+        super(MATERIAL_VILE, new Properties().component(DataComponents.TOOL, createToolProperties()));
+    }
+
+    public static Tool createToolProperties() {
+        return new Tool(List.of(Tool.Rule.minesAndDrops(List.of(Blocks.COBWEB), 15.0F), Tool.Rule.overrideSpeed(BlockTags.SWORD_EFFICIENT, 1.5F)), 1.0F, 2);
     }
 
     @Override
@@ -46,9 +58,8 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
         }
 
         @Override
-        public int getLevel()
-        {
-            return Tiers.IRON.getLevel();
+        public TagKey<Block> getIncorrectBlocksForDrops() {
+            return null;
         }
 
         @Override

@@ -125,7 +125,7 @@ public class MultiblockPattern
         {
             JsonObject json = element.getAsJsonObject();
 
-            ResourceLocation itemId = new ResourceLocation(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
+            ResourceLocation itemId = ResourceLocation.parse(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
             ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.get(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
@@ -152,7 +152,7 @@ public class MultiblockPattern
                     String[] split = state.split("\\[");
                     split[1] = split[1].substring(0, split[1].lastIndexOf("]")); // Make sure brackets are removed from state
 
-                    Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(split[0]));
+                    Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(split[0]));
                     if (block == Blocks.AIR) return Collections.singleton(block.defaultBlockState());
 
                     StateDefinition<Block, BlockState> blockState = block.getStateDefinition();
@@ -171,7 +171,7 @@ public class MultiblockPattern
                 }
                 else
                 {
-                    states.addAll(BuiltInRegistries.BLOCK.get(new ResourceLocation(state)).getStateDefinition().getPossibleStates());
+                    states.addAll(BuiltInRegistries.BLOCK.get(ResourceLocation.parse(state)).getStateDefinition().getPossibleStates());
                 }
             }
 

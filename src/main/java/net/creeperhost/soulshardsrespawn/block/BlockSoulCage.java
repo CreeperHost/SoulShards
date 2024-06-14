@@ -62,7 +62,7 @@ public class BlockSoulCage extends Block implements EntityBlock
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit)
     {
         if (!player.isSteppingCarefully()) return InteractionResult.PASS;
 

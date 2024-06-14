@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
@@ -32,7 +33,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = SoulShards.MODID)
+@EventBusSubscriber(modid = SoulShards.MODID)
 public class EventHandler
 {
     @SubscribeEvent
@@ -67,7 +68,6 @@ public class EventHandler
             if (binding == null)
             {
                 BindingEvent.NewBinding newBinding = new BindingEvent.NewBinding(event.getEntity(), new Binding(null, 0));
-                if (NeoForge.EVENT_BUS.post(newBinding).hasResult()) return;
 
                 if (shardItem.getCount() > 1)
                 { // Peel off one blank shard from a stack of them
@@ -81,7 +81,8 @@ public class EventHandler
             ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Base of 1 plus enchantment bonus
-            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER.get(), mainHand);
+            //TODO
+            int soulsGained = 1;// + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER.get(), mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, event.getEntity());
 

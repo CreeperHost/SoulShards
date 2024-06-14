@@ -2,10 +2,12 @@ package net.creeperhost.soulshardsrespawn.core.data;
 
 import net.creeperhost.soulshardsrespawn.api.IBinding;
 import net.creeperhost.soulshardsrespawn.api.IShardTier;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -30,10 +32,11 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag>
         this(boundEntity, null, kills);
     }
 
-    public Binding(CompoundTag bindingTag)
-    {
-        deserializeNBT(bindingTag);
-    }
+    //TODO
+//    public Binding(CompoundTag bindingTag)
+//    {
+//        deserializeNBT(bindingTag);
+//    }
 
     @Nullable
     @Override
@@ -86,9 +89,22 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag>
         return Tier.TIERS.floorEntry(kills).getValue();
     }
 
-    @Override
-    public CompoundTag serializeNBT()
+    @Nullable
+    public static Binding fromNBT(ItemStack stack)
     {
+        //TODO
+//        if (!stack.hasTag()) return null;
+//
+//        CompoundTag tag = stack.getTag();
+//        if (!tag.contains("binding")) return null;
+//
+//        return new Binding(tag.getCompound("binding"));
+
+        return null;
+    }
+
+    @Override
+    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
 
         if (boundEntity != null) tag.putString("bound", boundEntity.toString());
@@ -98,21 +114,9 @@ public class Binding implements IBinding, INBTSerializable<CompoundTag>
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt)
-    {
-        if (nbt.contains("bound")) this.boundEntity = new ResourceLocation(nbt.getString("bound"));
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        if (nbt.contains("bound")) this.boundEntity = ResourceLocation.parse(nbt.getString("bound"));
         if (nbt.hasUUID("owner")) this.owner = nbt.getUUID("owner");
         this.kills = nbt.getInt("kills");
-    }
-
-    @Nullable
-    public static Binding fromNBT(ItemStack stack)
-    {
-        if (!stack.hasTag()) return null;
-
-        CompoundTag tag = stack.getTag();
-        if (!tag.contains("binding")) return null;
-
-        return new Binding(tag.getCompound("binding"));
     }
 }

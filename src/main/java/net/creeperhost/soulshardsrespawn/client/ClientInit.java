@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import static net.creeperhost.soulshardsrespawn.SoulShards.MODID;
@@ -19,22 +18,21 @@ import static net.creeperhost.soulshardsrespawn.SoulShards.MODID;
  */
 public class ClientInit {
 
-    public static void init() {
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modBus.addListener(ClientInit::setupClient);
-        modBus.addListener(ClientInit::registerRenderers);
+    public static void init(IEventBus iEventBus) {
+        iEventBus.addListener(ClientInit::setupClient);
+        iEventBus.addListener(ClientInit::registerRenderers);
     }
 
     private static void setupClient(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
         {
-            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD.get(), new ResourceLocation(MODID, "bound"), (stack, level, living, id) ->
+            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD.get(), ResourceLocation.fromNamespaceAndPath(MODID, "bound"), (stack, level, living, id) ->
             {
                 ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
                 return soulShard.getBinding(stack) != null ? 1.0F : 0.0F;
             });
 
-            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD.get(), new ResourceLocation(MODID, "tier"), (stack, level, living, id) ->
+            ItemProperties.register(RegistrarSoulShards.SOUL_SHARD.get(), ResourceLocation.fromNamespaceAndPath(MODID, "tier"), (stack, level, living, id) ->
             {
                 ItemSoulShard soulShard = (ItemSoulShard) stack.getItem();
                 Binding binding = soulShard.getBinding(stack);

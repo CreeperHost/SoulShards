@@ -132,9 +132,10 @@ public class SoulSpawnerLogic extends BaseSpawner {
     }
 
     public boolean attemptEntitySpawn(Binding binding, EntityType<?> type, LivingEntity entity, ServerLevel level, double x, double y, double z) {
-        if (!level.noCollision(type.getAABB(x, y, z))) {
-            return false;
-        }
+        //TODO
+        //        if (!level.noCollision(type.getAABB(x, y, z))) {
+//            return false;
+//        }
         BlockPos blockpos = BlockPos.containing(x, y, z);
 
         if (binding.getTier().checkLight() && !canSpawnInLight(entity)) {
@@ -146,9 +147,10 @@ public class SoulSpawnerLogic extends BaseSpawner {
             return false;
         }
 
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !entity.canChangeDimensions()) {
-            return false;
-        }
+        //This should no longer be needed
+//        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && !entity.canChangeDimensions()) {
+//            return false;
+//        }
 
         CageSpawnEvent cageEvent = new CageSpawnEvent(binding, tile.getInventory().getStackInSlot(0), entity);
         if (NeoForge.EVENT_BUS.post(cageEvent).isCanceled()) {
@@ -160,10 +162,11 @@ public class SoulSpawnerLogic extends BaseSpawner {
                 return false;
             }
 
-            var finalizeEvent = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), null, null, this);
-            if (finalizeEvent != null) {
-                mob.finalizeSpawn(level, finalizeEvent.getDifficulty(), finalizeEvent.getSpawnType(), finalizeEvent.getSpawnData(), finalizeEvent.getSpawnTag());
-            }
+            //TODO
+//            var finalizeEvent = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), null, null, this);
+//            if (finalizeEvent != null) {
+//                mob.finalizeSpawn(level, finalizeEvent.getDifficulty(), finalizeEvent.getSpawnType(), finalizeEvent.getSpawnData(), finalizeEvent.getSpawnTag());
+//            }
         }
 
         return level.tryAddFreshEntityWithPassengers(entity);

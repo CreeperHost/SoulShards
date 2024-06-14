@@ -7,6 +7,7 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -97,17 +98,17 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        this.inventory.deserializeNBT(tag.getCompound("inventory"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+        this.inventory.deserializeNBT(provider, tag.getCompound("inventory"));
         this.spawnDelay = tag.getInt("spawnDelay");
         this.active = tag.getBoolean("active");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.put("inventory", inventory.serializeNBT());
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        tag.put("inventory", inventory.serializeNBT(provider));
         tag.putInt("spawnDelay", spawnDelay);
         tag.putBoolean("active", active);
     }
@@ -119,22 +120,23 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        tag.put("inventory", inventory.serializeNBT());
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag tag = super.getUpdateTag(provider);
+        tag.put("inventory", inventory.serializeNBT(provider));
         tag.putShort("spawnDelay", (short) spawnDelay);
         tag.putBoolean("active", active);
         return tag;
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         CompoundTag tag = pkt.getTag();
         if (tag == null) return;
-        this.inventory.deserializeNBT(tag.getCompound("inventory"));
+        this.inventory.deserializeNBT(lookupProvider, tag.getCompound("inventory"));
         this.spawnDelay = tag.getShort("spawnDelay");
         this.active = tag.getBoolean("active");
     }
+
 
     public ItemStackHandler getInventory() {
         return inventory;

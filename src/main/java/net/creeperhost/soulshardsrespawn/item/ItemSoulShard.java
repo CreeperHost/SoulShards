@@ -114,8 +114,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag)
-    {
+    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag flag) {
         Binding binding = getBinding(stack);
         if (binding == null) return;
 
@@ -185,7 +184,8 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
     public void updateBinding(ItemStack stack, Binding binding)
     {
-        if (!stack.hasTag()) stack.setTag(new CompoundTag());
-        stack.getTag().put("binding", binding.serializeNBT());
+        //TODO
+//        if (!stack.hasTag()) stack.setTag(new CompoundTag());
+//        stack.getTag().put("binding", binding.serializeNBT());
     }
 }
