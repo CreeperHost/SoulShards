@@ -1,5 +1,6 @@
 {
-  "type": "crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "group": "soulshards",
   "ingredients": [
     {
@@ -16,6 +17,7 @@
     }
   ],
   "result": {
-    "item": "soulshards:corrupted_essence"
+    "count": 1,
+    "id": "soulshards:corrupted_essence"
   }
 }

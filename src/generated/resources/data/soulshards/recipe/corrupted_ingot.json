@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "soulshards",
+  "key": {
+    "C": {
+      "item": "soulshards:corrupted_essence"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "V": {
+      "item": "soulshards:vile_dust"
+    }
+  },
+  "pattern": [
+    "CVC",
+    "VIV",
+    "CVC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "soulshards:corrupted_ingot"
+  }
+}

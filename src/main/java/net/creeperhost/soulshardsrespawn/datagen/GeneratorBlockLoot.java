@@ -21,9 +21,9 @@ import java.util.function.Supplier;
 
 public class GeneratorBlockLoot extends VanillaBlockLoot
 {
-    public GeneratorBlockLoot(HolderLookup.Provider p_344962_)
+    public GeneratorBlockLoot(HolderLookup.Provider provider)
     {
-        super(p_344962_);
+        super(provider);
     }
 
     @Override

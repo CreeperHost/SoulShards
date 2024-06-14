@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "soulshards",
+  "ingredients": [
+    {
+      "item": "soulshards:soul_shard"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "soulshards:soul_shard"
+  }
+}

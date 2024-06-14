@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "soulshards",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "I": {
+      "item": "soulshards:corrupted_ingot"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "B B",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "soulshards:soul_cage"
+  }
+}

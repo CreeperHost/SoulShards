@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "soulshards:soul_cage"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_vile_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "soulshards:corrupted_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_vile_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "soulshards:soul_cage"
+    ]
+  }
+}

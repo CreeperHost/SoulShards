@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "soulshards:corrupted_ingot"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_vile_dust": {
+      "conditions": {
+        "items": [
+          {
+            "items": "soulshards:vile_dust"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_vile_dust"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "soulshards:corrupted_ingot"
+    ]
+  }
+}

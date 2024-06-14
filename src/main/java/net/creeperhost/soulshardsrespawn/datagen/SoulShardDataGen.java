@@ -2,16 +2,18 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.creeperhost.soulshardsrespawn.datagen.providers.SoulShardsLootProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = SoulShards.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -26,7 +28,10 @@ public class SoulShardDataGen
 
     public static void registerServerProviders(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper)
     {
-        generator.addProvider(true, new SoulShardsLootProvider(generator.getPackOutput(), lookupProvider));
+        generator.addProvider(true, new GeneratorRecipes(generator.getPackOutput(), lookupProvider));
+        generator.addProvider(true, new LootTableProvider(generator.getPackOutput(), Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
+
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
     }
 

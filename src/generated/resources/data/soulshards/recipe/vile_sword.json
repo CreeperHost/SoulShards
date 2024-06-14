@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "soulshards",
+  "key": {
+    "I": {
+      "item": "soulshards:corrupted_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " I ",
+    " I ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "soulshards:vile_sword"
+  }
+}
