@@ -26,12 +26,12 @@ public class GeneratorRecipes extends RecipeProvider
     {
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(RegistrarSoulShards.VILE_DUST.get()), RecipeCategory.MISC,
                         Items.SOUL_SAND, 1.0f, 200)
-                .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Items.SOUL_SAND).build()))
+                .unlockedBy("has_soul_sand", inventoryTrigger(ItemPredicate.Builder.item().of(Items.SOUL_SAND).build()))
                 .save(consumer, ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "vile_dust_from_soul_sand"));
 
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(RegistrarSoulShards.VILE_DUST.get()), RecipeCategory.MISC,
                         Items.SOUL_SOIL, 1.0f, 200)
-                .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Items.SOUL_SOIL).build()))
+                .unlockedBy("has_soul_soil", inventoryTrigger(ItemPredicate.Builder.item().of(Items.SOUL_SOIL).build()))
                 .save(consumer, ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "vile_dust_from_soul_soil"));
 
 
