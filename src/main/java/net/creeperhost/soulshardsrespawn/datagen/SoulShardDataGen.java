@@ -29,8 +29,12 @@ public class SoulShardDataGen
     public static void registerServerProviders(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper)
     {
         generator.addProvider(true, new GeneratorRecipes(generator.getPackOutput(), lookupProvider));
-        generator.addProvider(true, new LootTableProvider(generator.getPackOutput(), Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
+
+        GeneratorBlockTags blockTags = new GeneratorBlockTags(generator.getPackOutput(), lookupProvider, SoulShards.MODID, existingFileHelper);
+        generator.addProvider(true, blockTags);
+
+        GeneratorItemTags itemTags = new GeneratorItemTags(generator.getPackOutput(), lookupProvider, blockTags.contentsGetter());
+        generator.addProvider(true, itemTags);
 
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
     }

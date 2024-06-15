@@ -12,14 +12,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -84,8 +89,7 @@ public class EventHandler
             ItemStack mainHand = player.getItemInHand(InteractionHand.MAIN_HAND);
 
             // Base of 1 plus enchantment bonus
-            //TODO
-            int soulsGained = 1;// + EnchantmentHelper.getItemEnchantmentLevel(RegistrarSoulShards.SOUL_STEALER.get(), mainHand);
+            int soulsGained = 1 + EnchantmentHelper.getItemEnchantmentLevel(getEnchantment(event.getEntity().level()), mainHand);
             if (mainHand.getItem() instanceof ISoulWeapon)
                 soulsGained += ((ISoulWeapon) mainHand.getItem()).getSoulBonus(mainHand, player, event.getEntity());
 
@@ -100,6 +104,12 @@ public class EventHandler
             if (newItem) // Give the player the peeled off stack
                 ItemHandlerHelper.giveItemToPlayer(player, shardItem);
         }
+    }
+
+    public static Holder<Enchantment> getEnchantment(Level level)
+    {
+        ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "soul_stealer"));
+        return level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolder(SOUL_STEALER).get();
     }
 
     @SubscribeEvent

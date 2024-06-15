@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
 
     public ItemVileSword()
     {
-        super(MATERIAL_VILE, new Item.Properties().attributes(SwordItem.createAttributes(MATERIAL_VILE, 3, -2.4F)));
+        super(MATERIAL_VILE, new Item.Properties().component(DataComponents.TOOL, SwordItem.createToolProperties()).attributes(SwordItem.createAttributes(MATERIAL_VILE, 3, -2.4F)));
     }
 
     @Override
@@ -51,8 +52,8 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
         }
 
         @Override
-        public TagKey<Block> getIncorrectBlocksForDrops() {
-            return null;
+        public @NotNull TagKey<Block> getIncorrectBlocksForDrops() {
+            return BlockTags.INCORRECT_FOR_IRON_TOOL;
         }
 
         @Override
@@ -62,7 +63,7 @@ public class ItemVileSword extends SwordItem implements ISoulWeapon
         }
 
         @Override
-        public Ingredient getRepairIngredient()
+        public @NotNull Ingredient getRepairIngredient()
         {
             return Ingredient.of(RegistrarSoulShards.CORRUPTED_INGOT.get());
         }
