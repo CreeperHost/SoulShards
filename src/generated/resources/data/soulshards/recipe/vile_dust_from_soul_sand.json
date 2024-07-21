@@ -1,13 +1,13 @@
 {
   "type": "minecraft:smelting",
-  "category": "blocks",
+  "category": "misc",
   "cookingtime": 200,
   "experience": 1.0,
   "ingredient": {
-    "item": "soulshards:vile_dust"
+    "item": "minecraft:soul_sand"
   },
   "result": {
     "count": 1,
-    "id": "minecraft:soul_sand"
+    "id": "soulshards:vile_dust"
   }
 }
