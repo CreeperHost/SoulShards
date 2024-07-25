@@ -16,6 +16,8 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -30,5 +32,12 @@ public class GeneratorBlockLoot extends VanillaBlockLoot
     protected void generate()
     {
         dropSelf(RegistrarSoulShards.SOUL_CAGE.get());
+    }
+
+    @Override
+    protected @NotNull Iterable<Block> getKnownBlocks() {
+        List<Block> knownBlocks = new ArrayList<>();
+        knownBlocks.addAll(RegistrarSoulShards.BLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
+        return knownBlocks;
     }
 }

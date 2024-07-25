@@ -37,6 +37,8 @@ public class SoulShardDataGen
         generator.addProvider(true, itemTags);
 
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
+        generator.addProvider(true, new LootTableProvider(generator.getPackOutput(), Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
     }
 
     public static void registerClientProviders(DataGenerator generator, ExistingFileHelper existingFileHelper)
