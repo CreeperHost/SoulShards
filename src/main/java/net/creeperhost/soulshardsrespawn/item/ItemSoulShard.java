@@ -185,8 +185,8 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
     public void updateBinding(ItemStack stack, Binding binding)
     {
-        stack.set(SSDataComponentType.BOUND_ENTITY, binding.getBoundEntity().toString());
-        stack.set(SSDataComponentType.OWNER, binding.getOwner().toString());
+        stack.set(SSDataComponentType.BOUND_ENTITY, binding.getBoundEntity() != null ? binding.getBoundEntity().toString() : "");
+        stack.set(SSDataComponentType.OWNER, binding.getOwner() != null ? binding.getOwner().toString() : "");
         stack.set(SSDataComponentType.KILLS, binding.getKills());
     }
 }

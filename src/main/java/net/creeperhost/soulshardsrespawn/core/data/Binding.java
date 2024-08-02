@@ -86,7 +86,14 @@ public class Binding implements IBinding
         if(stack.has(SSDataComponentType.BOUND_ENTITY) && stack.has(SSDataComponentType.OWNER) && stack.has(SSDataComponentType.KILLS))
         {
             ResourceLocation boundEntity = ResourceLocation.parse(stack.get(SSDataComponentType.BOUND_ENTITY));
-            UUID owner = UUID.fromString(stack.get(SSDataComponentType.OWNER));
+            UUID owner = UUID.randomUUID();
+            if(stack.get(SSDataComponentType.OWNER) != null && !stack.get(SSDataComponentType.OWNER).isEmpty()) {
+                owner = UUID.fromString(stack.get(SSDataComponentType.OWNER));
+            }
+            else
+            {
+                stack.set(SSDataComponentType.OWNER, owner.toString());
+            }
             int kills = stack.get(SSDataComponentType.KILLS);
             return new Binding(boundEntity, owner, kills);
         }
