@@ -121,7 +121,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
         if (binding.getBoundEntity() != null)
         {
-            EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
+            EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity()).get().value();
             if (entityEntry != null)
             {
                 ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);

@@ -109,7 +109,9 @@ public class EventHandler
     public static Holder<Enchantment> getEnchantment(Level level)
     {
         ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "soul_stealer"));
-        return level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolder(SOUL_STEALER).get();
+
+        return level.registryAccess().lookup(Registries.ENCHANTMENT).get().get(SOUL_STEALER).get();
+//        return level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolder(SOUL_STEALER).get();
     }
 
     @SubscribeEvent

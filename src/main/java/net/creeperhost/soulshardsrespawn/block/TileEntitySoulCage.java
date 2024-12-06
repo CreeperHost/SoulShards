@@ -45,7 +45,7 @@ public class TileEntitySoulCage extends BlockEntity {
             boolean newState = canSpawn();
             if (newState != active) {
                 setActive(newState);
-                level.neighborChanged(getBlockPos(), getBlockState().getBlock(), getBlockPos());
+                level.neighborChanged(getBlockPos(), getBlockState().getBlock(), null);
             }
             spawnerLogic.serverTick((ServerLevel) level, worldPosition);
         } else {
