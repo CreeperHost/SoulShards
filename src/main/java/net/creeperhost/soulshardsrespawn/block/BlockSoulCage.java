@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -36,9 +37,9 @@ public class BlockSoulCage extends Block implements EntityBlock
     public static final Property<Boolean> POWERED = BooleanProperty.create("powered");
     public static final Property<Boolean> ACTIVE = BooleanProperty.create("active");
 
-    public BlockSoulCage()
+    public BlockSoulCage(Properties props)
     {
-        super(Properties.of().mapColor(MapColor.METAL).strength(3.0F).noOcclusion());
+        super(props);
         registerDefaultState(getStateDefinition().any().setValue(POWERED, false).setValue(ACTIVE, false));
     }
 
@@ -83,7 +84,7 @@ public class BlockSoulCage extends Block implements EntityBlock
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean someBool)
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighbor, Orientation orientation, boolean someBool)
     {
         handleRedstoneChange(world, state, pos);
     }

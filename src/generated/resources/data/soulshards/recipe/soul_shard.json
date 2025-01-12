@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "soulshards",
   "ingredients": [
-    {
-      "item": "soulshards:soul_shard"
-    }
+    "soulshards:soul_shard"
   ],
   "result": {
     "count": 1,

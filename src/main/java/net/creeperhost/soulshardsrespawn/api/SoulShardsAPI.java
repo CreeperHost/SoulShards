@@ -13,9 +13,7 @@ public class SoulShardsAPI
     public static final TagKey<Item> SOUL_STEALER_ENCHANTABLE = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("soulshards", "enchantable/soul_stealer"));
     public static boolean isAllowed(ResourceLocation resourceLocation)
     {
-        EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(resourceLocation);
-        if(entityEntry == null) return false;
-        if(entityEntry.is(SOULSHARDS_DENYLIST)) return false;
-        return true;
+        EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.getValue(resourceLocation);
+        return !entityEntry.is(SOULSHARDS_DENYLIST);
     }
 }

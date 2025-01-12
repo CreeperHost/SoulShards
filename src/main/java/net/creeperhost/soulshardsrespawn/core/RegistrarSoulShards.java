@@ -11,13 +11,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class RegistrarSoulShards
 {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, SoulShards.MODID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, SoulShards.MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(SoulShards.MODID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SoulShards.MODID);
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SoulShards.MODID);
 
@@ -30,16 +32,15 @@ public class RegistrarSoulShards
 
     public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, SoulShards.MODID);
 
-    public static final DeferredHolder<Item, Item> VILE_DUST = ITEMS.register("vile_dust", () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item, Item> VILE_SWORD = ITEMS.register("vile_sword", () -> new ItemVileSword());
-    public static final DeferredHolder<Item, Item> CORRUPTED_ESSENCE = ITEMS.register("corrupted_essence", () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item, Item> CORRUPTED_INGOT = ITEMS.register("corrupted_ingot", () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item, Item> SOUL_SHARD = ITEMS.register("soul_shard", () -> new ItemSoulShard());
+    public static final DeferredHolder<Item, Item> VILE_DUST = ITEMS.registerItem("vile_dust", Item::new);
+    public static final DeferredHolder<Item, Item> VILE_SWORD = ITEMS.registerItem("vile_sword", ItemVileSword::new);
+    public static final DeferredHolder<Item, Item> CORRUPTED_ESSENCE = ITEMS.registerItem("corrupted_essence", Item::new);
+    public static final DeferredHolder<Item, Item> CORRUPTED_INGOT = ITEMS.registerItem("corrupted_ingot", Item::new);
+    public static final DeferredHolder<Item, Item> SOUL_SHARD = ITEMS.registerItem("soul_shard", ItemSoulShard::new);
 
-    public static final DeferredHolder<Block, Block> SOUL_CAGE = BLOCKS.register("soul_cage", () -> new BlockSoulCage());
-    public static final DeferredHolder<Item, BlockItem> SOUL_CAGE_ITEM = ITEMS.register("soul_cage", () -> new BlockItem(SOUL_CAGE.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, Block> SOUL_CAGE = BLOCKS.registerBlock("soul_cage", BlockSoulCage::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F).noOcclusion());
+    public static final DeferredHolder<Item, Item> SOUL_CAGE_ITEM = ITEMS.registerItem("soul_cage", (props) -> new BlockItem(SOUL_CAGE.get(), props));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE =
-            TILES_ENTITIES.register("soul_cage", () -> BlockEntityType.Builder.of(TileEntitySoulCage::new, SOUL_CAGE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE = TILES_ENTITIES.register("soul_cage", () -> new BlockEntityType<>(TileEntitySoulCage::new, SOUL_CAGE.get()));
 
 }

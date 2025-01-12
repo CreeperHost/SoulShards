@@ -1,4 +1,4 @@
-# This is an example mods.toml file. It contains the data relating to the loading mods.
+# This is an example neoforge.mods.toml file. It contains the data relating to the loading mods.
 # There are several mandatory fields (#mandatory), and many more that are optional (#optional).
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
@@ -15,7 +15,7 @@ license="${mod_license}"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="${mod_id}" #mandatory
+modId="soulshards" #mandatory
 # The version number of the mod
 version="${mod_version}" #mandatory
 # A display name for the mod
@@ -38,37 +38,41 @@ authors="${mod_authors}" #optional
 # IMPORTANT NOTE: this is NOT an instruction as to which environments (CLIENT or DEDICATED SERVER) your mod loads on. Your mod should load (and maybe do nothing!) whereever it finds itself.
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
 
+# The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+#[[mixins]]
+#    config="soulshards.mixins.json"
+
 # The description text for the mod (multi line!) (#mandatory)
 description='''${mod_description}'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.${mod_id}]] #optional
-# the modid of the dependency
-modId="neoforge" #mandatory
-# The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
-# 'required' requires the mod to exist, 'optional' does not
-# 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
-type="required" #mandatory
-# Optional field describing why the dependency is required or why it is incompatible
-# reason="..."
-# The version range of the dependency
-versionRange="${neo_version_range}" #mandatory
-# An ordering relationship for the dependency.
-# BEFORE - This mod is loaded BEFORE the dependency
-# AFTER - This mod is loaded AFTER the dependency
-ordering="NONE"
-# Side this dependency is applied on - BOTH, CLIENT, or SERVER
-side="BOTH"
-# Here's another dependency
-[[dependencies.${mod_id}]]
-modId="minecraft"
-type="required"
-# This version range declares a minimum of the current minecraft version up to but not including the next major version
-versionRange="${minecraft_version_range}"
-ordering="NONE"
-side="BOTH"
+[[dependencies.soulshards]] #optional
+    # the modid of the dependency
+    modId="neoforge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    type="required" #mandatory
+    # The version range of the dependency
+    versionRange="${neo_version_range}" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the dependency is not mandatory
+    # BEFORE - This mod is loaded BEFORE the dependency
+    # AFTER - This mod is loaded AFTER the dependency
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT, or SERVER
+    side="BOTH"
 
-# Features are specific properties of the game environment, that you may want to declare you require. This example declares
-# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
-# stop your mod loading on the server for example.
-#[features.${mod_id}]
-#openGLVersion="[3.2,)"
+[[dependencies.soulshards]]
+    modId="minecraft"
+    type="required"
+    # This version range declares a minimum of the current minecraft version up to but not including the next major version
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.soulshards]]
+    modId = "polylib"
+    type="required"
+    versionRange = "[2104.0.4,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[accessTransformers]]
+    file="META-INF/accesstransformer.cfg"

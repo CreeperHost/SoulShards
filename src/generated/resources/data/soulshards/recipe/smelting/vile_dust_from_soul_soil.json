@@ -3,9 +3,8 @@
   "category": "misc",
   "cookingtime": 200,
   "experience": 1.0,
-  "ingredient": {
-    "item": "minecraft:soul_soil"
-  },
+  "group": "soulshards",
+  "ingredient": "minecraft:soul_soil",
   "result": {
     "count": 1,
     "id": "soulshards:vile_dust"

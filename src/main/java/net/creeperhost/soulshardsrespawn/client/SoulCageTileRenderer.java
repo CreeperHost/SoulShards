@@ -36,7 +36,7 @@ public class SoulCageTileRenderer implements BlockEntityRenderer<TileEntitySoulC
             stack.translate(0.0D, -0.2F, 0.0D);
             stack.mulPose(Axis.XP.rotationDegrees(-30.0F));
             stack.scale(f, f, f);
-            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, stack, buffers, packedLight);
+            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0, 0.0, 0.0, partialTicks, stack, buffers, packedLight);
         }
         stack.popPose();
 

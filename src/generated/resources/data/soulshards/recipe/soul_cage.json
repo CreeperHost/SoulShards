@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "soulshards",
   "key": {
-    "B": {
-      "item": "minecraft:iron_bars"
-    },
-    "I": {
-      "item": "soulshards:corrupted_ingot"
-    }
+    "B": "minecraft:iron_bars",
+    "I": "soulshards:corrupted_ingot"
   },
   "pattern": [
     "IBI",

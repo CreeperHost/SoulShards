@@ -3,18 +3,10 @@
   "category": "misc",
   "group": "soulshards",
   "ingredients": [
-    {
-      "item": "minecraft:lapis_lazuli"
-    },
-    {
-      "item": "minecraft:redstone"
-    },
-    {
-      "item": "minecraft:obsidian"
-    },
-    {
-      "item": "minecraft:obsidian"
-    }
+    "minecraft:lapis_lazuli",
+    "minecraft:redstone",
+    "minecraft:obsidian",
+    "minecraft:obsidian"
   ],
   "result": {
     "count": 1,

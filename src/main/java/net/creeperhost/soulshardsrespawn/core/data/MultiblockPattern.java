@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -28,8 +28,7 @@ import java.util.function.Predicate;
 @JsonAdapter(MultiblockPattern.Serializer.class)
 public class MultiblockPattern
 {
-    public static final MultiblockPattern DEFAULT = new MultiblockPattern(new ItemStack(Items.DIAMOND), new String[]{"OQO", "QGQ", "OQO"}, new Point(1, 1), new HashMap<Character, Slot>()
-    {{
+    public static final MultiblockPattern DEFAULT = new MultiblockPattern(new ItemStack(Items.DIAMOND), new String[]{"OQO", "QGQ", "OQO"}, new Point(1, 1), new HashMap<>() {{
         put('O', new Slot(Blocks.OBSIDIAN));
         put('Q', new Slot(Blocks.QUARTZ_BLOCK));
         put('G', new Slot(Blocks.GLOWSTONE));
@@ -68,7 +67,8 @@ public class MultiblockPattern
         return catalyst;
     }
 
-    public InteractionResultHolder<Set<BlockPos>> match(Level world, BlockPos originBlock)
+    @Nullable
+    public Set<BlockPos> match(Level world, BlockPos originBlock)
     {
         Set<BlockPos> matched = Sets.newHashSet();
         for (int y = 0; y < shape.length; y++)
@@ -78,14 +78,15 @@ public class MultiblockPattern
             {
                 BlockPos offset = originBlock.offset(x - origin.x, 0, y - origin.y);
                 BlockState state = world.getBlockState(offset);
-                if (!definition.get(line.charAt(x)).test(state))
-                    return new InteractionResultHolder<>(InteractionResult.FAIL, Collections.emptySet());
+                if (!definition.get(line.charAt(x)).test(state)) {
+                    return null;
+                }
 
                 matched.add(offset);
             }
         }
 
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, matched);
+        return matched;
     }
 
     public boolean isOriginBlock(BlockState state)
@@ -125,7 +126,7 @@ public class MultiblockPattern
             JsonObject json = element.getAsJsonObject();
 
             ResourceLocation itemId = ResourceLocation.parse(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
-            ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.get(itemId), 1);
+            ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.getValue(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
             Point origin = context.deserialize(json.getAsJsonObject("origin"), Point.class);
@@ -151,7 +152,7 @@ public class MultiblockPattern
                     String[] split = state.split("\\[");
                     split[1] = split[1].substring(0, split[1].lastIndexOf("]")); // Make sure brackets are removed from state
 
-                    Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(split[0]));
+                    Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(split[0]));
                     if (block == Blocks.AIR) return Collections.singleton(block.defaultBlockState());
 
                     StateDefinition<Block, BlockState> blockState = block.getStateDefinition();
@@ -170,7 +171,7 @@ public class MultiblockPattern
                 }
                 else
                 {
-                    states.addAll(BuiltInRegistries.BLOCK.get(ResourceLocation.parse(state)).getStateDefinition().getPossibleStates());
+                    states.addAll(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(state)).getStateDefinition().getPossibleStates());
                 }
             }
 

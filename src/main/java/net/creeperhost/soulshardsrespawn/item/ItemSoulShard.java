@@ -35,9 +35,9 @@ import java.util.List;
 
 public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 {
-    public ItemSoulShard()
+    public ItemSoulShard(Properties properties)
     {
-        super(new Properties());
+        super(properties);
     }
 
     @Override
@@ -119,11 +119,9 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         Binding binding = getBinding(stack);
         if (binding == null) return;
 
-        if (binding.getBoundEntity() != null)
-        {
-            EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity()).get().value();
-            if (entityEntry != null)
-            {
+        if (binding.getBoundEntity() != null) {
+            if (BuiltInRegistries.ENTITY_TYPE.containsKey(binding.getBoundEntity())) {
+                EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.getValue(binding.getBoundEntity());
                 ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);
                 tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation.toString()));
             }

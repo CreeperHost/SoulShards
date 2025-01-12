@@ -3,15 +3,9 @@
   "category": "misc",
   "group": "soulshards",
   "key": {
-    "C": {
-      "item": "soulshards:corrupted_essence"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "V": {
-      "item": "soulshards:vile_dust"
-    }
+    "C": "soulshards:corrupted_essence",
+    "I": "minecraft:iron_ingot",
+    "V": "soulshards:vile_dust"
   },
   "pattern": [
     "CVC",

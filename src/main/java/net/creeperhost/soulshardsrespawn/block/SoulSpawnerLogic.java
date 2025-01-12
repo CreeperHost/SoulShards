@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -88,16 +89,17 @@ public class SoulSpawnerLogic extends BaseSpawner {
         Binding binding = tile.getBinding();
         IShardTier tier = binding.getTier();
 
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(binding.getBoundEntity());
-        if (type == null) {
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(binding.getBoundEntity())) {
             resetTimer();
             return;
         }
 
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(binding.getBoundEntity());
+
         boolean spawnedAny = false;
         int successCount = 0;
         for (int i = 0; i < tier.getSpawnAmount() + tier.getIndex() + 3; ++i) {
-            LivingEntity entity = (LivingEntity) type.create(level);
+            LivingEntity entity = (LivingEntity) type.create(level, EntitySpawnReason.SPAWNER);
             if (entity == null || hasReachedSpawnCap(entity)) {
                 this.resetTimer();
                 return;
@@ -138,12 +140,12 @@ public class SoulSpawnerLogic extends BaseSpawner {
         }
         BlockPos blockpos = BlockPos.containing(x, y, z);
 
-        if (binding.getTier().checkLight() && !canSpawnInLight(entity)) {
+        if (binding.getTier().checkLight() && entity instanceof Monster && !Monster.isDarkEnoughToSpawn(level, blockpos, level.random)) {
             return false;
         }
 
         int tier = binding.getTier().getIndex();
-        if (tier < 5 && !SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.SPAWNER, blockpos, level.getRandom())) {
+        if (tier < 5 && !SpawnPlacements.checkSpawnRules(type, level, EntitySpawnReason.SPAWNER, blockpos, level.getRandom())) {
             return false;
         }
 
@@ -154,11 +156,11 @@ public class SoulSpawnerLogic extends BaseSpawner {
         }
 
         if (entity instanceof Mob mob) {
-            if (tier < 5 && (!mob.checkSpawnRules(level, MobSpawnType.SPAWNER) || !mob.checkSpawnObstruction(level))) {
+            if (tier < 5 && (!mob.checkSpawnRules(level, EntitySpawnReason.SPAWNER) || !mob.checkSpawnObstruction(level))) {
                 return false;
             }
 
-            var finalizeEvent = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.SPAWNER, null, this, true);
+            var finalizeEvent = EventHooks.finalizeMobSpawnSpawner(mob, level, level.getCurrentDifficultyAt(entity.blockPosition()), EntitySpawnReason.SPAWNER, null, this, true);
 
             if (finalizeEvent != null && !finalizeEvent.isSpawnCancelled()) {
                 mob.finalizeSpawn(level, finalizeEvent.getDifficulty(), finalizeEvent.getSpawnType(), finalizeEvent.getSpawnData());
@@ -192,10 +194,9 @@ public class SoulSpawnerLogic extends BaseSpawner {
         ResourceLocation key = tile.getBinding().getBoundEntity();
         if (key == null) return null;
         return RENDER_ENTITY_CACHE.computeIfAbsent(key, name -> {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(name);
-            if (type == null) return EntityType.PIG.create(level);
-            Entity entity = type.create(level);
-            if (entity == null) return EntityType.PIG.create(level);
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(name);
+            Entity entity = type.create(level, EntitySpawnReason.SPAWNER);
+            if (entity == null) return EntityType.PIG.create(level, EntitySpawnReason.SPAWNER);
             return entity;
         });
     }
