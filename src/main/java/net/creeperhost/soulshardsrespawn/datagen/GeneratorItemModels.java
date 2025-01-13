@@ -26,6 +26,7 @@ public class GeneratorItemModels extends ItemModelProvider
         singleTexture(getPath(RegistrarSoulShards.CORRUPTED_ESSENCE.get()), mcLoc("item/generated"), "layer0", modLoc("item/corrupted_essence"));
         singleTexture(getPath(RegistrarSoulShards.CORRUPTED_INGOT.get()), mcLoc("item/generated"), "layer0", modLoc("item/corrupted_ingot"));
 
+        singleTexture("soul_shard", mcLoc("item/generated"), "layer0", modLoc("item/soul_shard"));
         singleTexture("soul_shard_tier_0", mcLoc("item/generated"), "layer0", modLoc("item/soul_shard_tier_0"));
         singleTexture("soul_shard_tier_1", mcLoc("item/generated"), "layer0", modLoc("item/soul_shard_tier_1"));
         singleTexture("soul_shard_tier_2", mcLoc("item/generated"), "layer0", modLoc("item/soul_shard_tier_2"));

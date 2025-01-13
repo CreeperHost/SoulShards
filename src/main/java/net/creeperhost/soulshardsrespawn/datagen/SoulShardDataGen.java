@@ -41,6 +41,8 @@ public class SoulShardDataGen
         GeneratorItemTags itemTags = new GeneratorItemTags(generator.getPackOutput(), lookupProvider, blockTags.contentsGetter());
         generator.addProvider(true, itemTags);
 
+        generator.addProvider(true, new GeneratorEnchantmentTags(generator.getPackOutput(), lookupProvider, SoulShards.MODID, existingFileHelper));
+
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider, existingFileHelper));
         generator.addProvider(true, new LootTableProvider(generator.getPackOutput(), Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
@@ -73,6 +75,7 @@ public class SoulShardDataGen
             add(RegistrarSoulShards.VILE_SWORD.get(), "Vile Sword");
 
             add(RegistrarSoulShards.SOUL_CAGE.get(), "Soul Cage");
+            add(RegistrarSoulShards.SOUL_CAGE_ITEM.get(), "Soul Cage");
 
             add("tooltip.soulshards.bound", "Bound to: %s");
             add("tooltip.soulshards.kills", "Souls: %d");
@@ -103,6 +106,9 @@ public class SoulShardDataGen
             add("jei.soulshards.soul_shard.title", "Soul Shard Crafting");
             add("jei.soulshards.soul_shard.creation", "Right-click on the top\nof the §5Glowstone Block§r\nwith a %s in hand");
             add("jei.soulshards.soul_shard.multiblock", "4x Obsidian\n4x Block of Quartz\n1x Glowstone");
+
+            add("config.jade.plugin_soulshards.cage_data", "Soul Cage Data");
+            add("config.jade.plugin_soulshards.entity_data", "Soul Cage Entity");
         }
     }
 }

@@ -1,6 +1,54 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "soulshards:item/soul_shard"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_0"
+        },
+        "when": 0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_1"
+        },
+        "when": 1
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_2"
+        },
+        "when": 2
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_3"
+        },
+        "when": 3
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_4"
+        },
+        "when": 4
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "soulshards:item/soul_shard_tier_5"
+        },
+        "when": 5
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "soulshards:item/soul_shard"
+    },
+    "property": "soulshards:shard_tier"
   }
 }
