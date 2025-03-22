@@ -1,6 +1,13 @@
 package net.creeperhost.soulshardsrespawn.core;
 
+import com.google.gson.reflect.TypeToken;
+import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.MultiblockPattern;
+import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.util.Objects;
 
 public class ConfigSoulShards
 {
@@ -31,8 +38,16 @@ public class ConfigSoulShards
     }
 
 
-    public static void handleMultiblock()
-    {
+    public static void handleMultiblock() {
+        File multiblockFile = new File(SoulShards.CONFIG_DIR, "multiblock.json");
+        if (!multiblockFile.exists()) {
+            try {
+                FileUtils.copyInputStreamToFile(Objects.requireNonNull(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json")), multiblockFile);
+            } catch (Throwable e) {
+                SoulShards.LOGGER.error("Failed to load default multiblock config", e);
+            }
+        }
+        multiblock = JsonUtil.fromJson(TypeToken.get(MultiblockPattern.class), multiblockFile);
         if (multiblock == null) multiblock = MultiblockPattern.DEFAULT;
     }
 
