@@ -14,9 +14,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
 
 import java.awt.*;
 import java.lang.reflect.Type;
@@ -29,8 +29,8 @@ import java.util.function.Predicate;
 @JsonAdapter(MultiblockPattern.Serializer.class)
 public class MultiblockPattern
 {
-    public static final MultiblockPattern DEFAULT = new MultiblockPattern(new ItemStack(Items.DIAMOND), new String[]{"OQO", "QGQ", "OQO"}, new Point(1, 1), new HashMap<Character, Slot>()
-    {{
+
+    public static final MultiblockPattern DEFAULT = new MultiblockPattern(new ItemStack(Items.DIAMOND), new String[]{"OQO", "QGQ", "OQO"}, new Point(1, 1), new HashMap<>() {{
         put('O', new Slot(Blocks.OBSIDIAN));
         put('Q', new Slot(Blocks.QUARTZ_BLOCK));
         put('G', new Slot(Blocks.GLOWSTONE));
@@ -99,11 +99,11 @@ public class MultiblockPattern
     {
 
         @JsonAdapter(SerializerBlockState.class)
-        private final Set<BlockState> states;
+        private final Set<BlockState> blocks;
 
         public Slot(BlockState... states)
         {
-            this.states = Sets.newHashSet(states);
+            this.blocks = Sets.newHashSet(states);
         }
 
         public Slot(Block block)
@@ -114,7 +114,7 @@ public class MultiblockPattern
         @Override
         public boolean test(BlockState state)
         {
-            return states.contains(state);
+            return blocks.contains(state);
         }
     }
 
@@ -131,48 +131,26 @@ public class MultiblockPattern
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
             Point origin = context.deserialize(json.getAsJsonObject("origin"), Point.class);
-            Map<Character, Slot> definition = context.deserialize(json.getAsJsonObject("definition"), new TypeToken<Map<Character, Slot>>()
-            {
-            }.getType());
+            Map<Character, Slot> definition = context.deserialize(json.getAsJsonObject("definition"), new TypeToken<Map<Character, Slot>>(){}.getType());
 
             return new MultiblockPattern(catalyst, shape, origin, definition);
         }
     }
 
-    public static class SerializerBlockState implements JsonDeserializer<Set<BlockState>>
-    {
+    public static class SerializerBlockState implements JsonDeserializer<Set<BlockState>> {
         @Override
-        public Set<BlockState> deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-        {
+        public Set<BlockState> deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             Set<BlockState> states = Sets.newHashSet();
-            for (JsonElement entry : element.getAsJsonArray())
-            {
-                String state = entry.getAsJsonPrimitive().getAsString();
-                if (state.contains("["))
-                {
-                    String[] split = state.split("\\[");
-                    split[1] = split[1].substring(0, split[1].lastIndexOf("]")); // Make sure brackets are removed from state
-
-                    Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(split[0]));
-                    if (block == Blocks.AIR) return Collections.singleton(block.defaultBlockState());
-
-                    StateDefinition<Block, BlockState> blockState = block.getStateDefinition();
-                    BlockState returnState = blockState.getOwner().defaultBlockState();
-
-                    // Force our values into the state
-                    String[] stateValues = split[1].split(","); // Splits up each value
-                    for (String value : stateValues)
-                    {
-                        String[] valueSplit = value.split("=");
-                        Property<?> property = blockState.getProperty(valueSplit[0]);
-                        //TODO
-                        //                        if (property != null)
-                        //                            returnState = returnState.setValue(property, (Comparable) property.getValue(valueSplit[1]).get());
+            for (JsonElement entry : element.getAsJsonArray()) {
+                if (!entry.isJsonPrimitive()) {
+                    throw new JsonParseException("Found invalid block when parsing SoulShards multiblock file: " + entry + ", Expected String");
+                } else {
+                    for (BlockState possible : BuiltInRegistries.BLOCK.get(new ResourceLocation(entry.getAsString())).getStateDefinition().getPossibleStates()) {
+                        if (possible.getBlock() instanceof SlabBlock && possible.getValue(SlabBlock.TYPE) != SlabType.DOUBLE) {
+                            continue;
+                        }
+                        states.add(possible);
                     }
-                }
-                else
-                {
-                    states.addAll(BuiltInRegistries.BLOCK.get(new ResourceLocation(state)).getStateDefinition().getPossibleStates());
                 }
             }
 
