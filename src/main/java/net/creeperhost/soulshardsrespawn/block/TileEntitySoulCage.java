@@ -8,10 +8,12 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -98,11 +100,19 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (level != null) {
+            ItemStack stack = this.getInventory().getStackInSlot(0);
+            Containers.dropContents(level, pos, NonNullList.of(ItemStack.EMPTY, stack));
+        }
+    }
+
+    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
-        this.inventory.deserializeNBT(provider, tag.getCompound("inventory"));
-        this.spawnDelay = tag.getInt("spawnDelay");
-        this.active = tag.getBoolean("active");
+        this.inventory.deserializeNBT(provider, tag.getCompoundOrEmpty("inventory"));
+        this.spawnDelay = tag.getIntOr("spawnDelay", -1);
+        this.active = tag.getBooleanOr("active", false);
     }
 
     @Override
@@ -132,9 +142,9 @@ public class TileEntitySoulCage extends BlockEntity {
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         CompoundTag tag = pkt.getTag();
         if (tag == null) return;
-        this.inventory.deserializeNBT(lookupProvider, tag.getCompound("inventory"));
-        this.spawnDelay = tag.getShort("spawnDelay");
-        this.active = tag.getBoolean("active");
+        this.inventory.deserializeNBT(lookupProvider, tag.getCompoundOrEmpty("inventory"));
+        this.spawnDelay = tag.getShortOr("spawnDelay", (short) -1);
+        this.active = tag.getBooleanOr("active", false);
     }
 
 

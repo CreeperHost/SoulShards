@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -96,21 +97,6 @@ public class BlockSoulCage extends Block implements EntityBlock
         {
             world.setBlock(pos, state.setValue(POWERED, false), 3);
         }
-    }
-
-    @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState blockState2, boolean someBool)
-    {
-        if (state.getBlock() != blockState2.getBlock())
-        {
-            TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
-            if (cage != null)
-            {
-                ItemStack stack = cage.getInventory().getStackInSlot(0);
-                Containers.dropContents(world, pos, NonNullList.of(ItemStack.EMPTY, stack));
-            }
-        }
-        super.onRemove(state, world, pos, blockState2, someBool);
     }
 
     @Override

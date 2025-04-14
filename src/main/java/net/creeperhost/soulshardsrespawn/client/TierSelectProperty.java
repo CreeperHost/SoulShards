@@ -6,6 +6,8 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperty;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +27,11 @@ public record TierSelectProperty() implements SelectItemModelProperty<Integer> {
             return binding == null ? null : binding.getTier().getIndex();
         }
         return null;
+    }
+
+    @Override
+    public Codec<Integer> valueCodec() {
+        return Codec.INT;
     }
 
     @Override

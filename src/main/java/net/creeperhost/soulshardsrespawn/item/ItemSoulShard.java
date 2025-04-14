@@ -19,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SpawnerBlock;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 {
@@ -114,8 +116,9 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         return items;
     }
 
+
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, TooltipDisplay tooltip, Consumer<Component> consumer, TooltipFlag flag) {
         Binding binding = getBinding(stack);
         if (binding == null) return;
 
@@ -123,14 +126,14 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(binding.getBoundEntity())) {
                 EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.getValue(binding.getBoundEntity());
                 ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);
-                tooltip.add(Component.translatable("tooltip.soulshards.bound", resourceLocation.toString()));
+                consumer.accept(Component.translatable("tooltip.soulshards.bound", resourceLocation.toString()));
             }
         }
 
-        tooltip.add(Component.translatable("tooltip.soulshards.tier", binding.getTier().getIndex()));
-        tooltip.add(Component.translatable("tooltip.soulshards.kills", binding.getKills()));
+        consumer.accept(Component.translatable("tooltip.soulshards.tier", binding.getTier().getIndex()));
+        consumer.accept(Component.translatable("tooltip.soulshards.kills", binding.getKills()));
         if (flag.isAdvanced() && binding.getOwner() != null)
-            tooltip.add(Component.translatable("tooltip.soulshards.owner", binding.getOwner().toString()));
+            consumer.accept(Component.translatable("tooltip.soulshards.owner", binding.getOwner().toString()));
     }
 
     @Override
@@ -183,8 +186,16 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
     public void updateBinding(ItemStack stack, Binding binding)
     {
-        stack.set(SSDataComponentType.BOUND_ENTITY, binding.getBoundEntity() != null ? binding.getBoundEntity().toString() : "");
-        stack.set(SSDataComponentType.OWNER, binding.getOwner() != null ? binding.getOwner().toString() : "");
+        if (binding.getBoundEntity() == null) {
+            stack.remove(SSDataComponentType.BOUND_ENTITY);
+        }else {
+            stack.set(SSDataComponentType.BOUND_ENTITY, binding.getBoundEntity().toString());
+        }
+        if (binding.getOwner() == null) {
+            stack.remove(SSDataComponentType.OWNER);
+        }else {
+            stack.set(SSDataComponentType.OWNER, binding.getOwner().toString());
+        }
         stack.set(SSDataComponentType.KILLS, binding.getKills());
     }
 }

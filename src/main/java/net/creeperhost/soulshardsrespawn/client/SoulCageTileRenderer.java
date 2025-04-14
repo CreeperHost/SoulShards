@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Created by brandon3055 on 12/01/2024
@@ -19,7 +20,7 @@ public class SoulCageTileRenderer implements BlockEntityRenderer<TileEntitySoulC
     public SoulCageTileRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
-    public void render(TileEntitySoulCage tile, float partialTicks, PoseStack stack, MultiBufferSource buffers, int packedLight, int packedOverlay) {
+    public void render(TileEntitySoulCage tile, float partialTicks, PoseStack stack, MultiBufferSource buffers, int packedLight, int packedOverlay, Vec3 vec3) {
         SoulSpawnerLogic spawnerLogic = tile.spawnerLogic;
         stack.pushPose();
         stack.translate(0.5D, 0.0D, 0.5D);

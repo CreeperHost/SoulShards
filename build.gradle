@@ -131,10 +131,10 @@ dependencies {
 //    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
 //    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    runtimeOnly "curse.maven:roughly-enough-items-310111:5987570"
-    runtimeOnly "curse.maven:cloth-config-348521:5987045"
+    runtimeOnly "curse.maven:roughly-enough-items-310111:6414282"
+    runtimeOnly "curse.maven:cloth-config-348521:6351757"
 
-    implementation "curse.maven:jade-324717:6011327"
+    implementation "curse.maven:jade-324717:6389812"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

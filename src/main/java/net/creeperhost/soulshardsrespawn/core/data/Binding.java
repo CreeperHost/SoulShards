@@ -83,19 +83,16 @@ public class Binding implements IBinding
     @Nullable
     public static Binding fromNBT(ItemStack stack)
     {
-        if(stack.has(SSDataComponentType.BOUND_ENTITY) && stack.has(SSDataComponentType.OWNER) && stack.has(SSDataComponentType.KILLS))
+        if(stack.has(SSDataComponentType.BOUND_ENTITY) || stack.has(SSDataComponentType.OWNER) || stack.has(SSDataComponentType.KILLS))
         {
-            ResourceLocation boundEntity = ResourceLocation.parse(stack.get(SSDataComponentType.BOUND_ENTITY));
-            UUID owner = UUID.randomUUID();
-            if(stack.get(SSDataComponentType.OWNER) != null && !stack.get(SSDataComponentType.OWNER).isEmpty()) {
-                owner = UUID.fromString(stack.get(SSDataComponentType.OWNER));
-            }
-            else
-            {
-                stack.set(SSDataComponentType.OWNER, owner.toString());
-            }
-            int kills = stack.get(SSDataComponentType.KILLS);
-            return new Binding(boundEntity, owner, kills);
+            String name = stack.get(SSDataComponentType.BOUND_ENTITY);
+            ResourceLocation boundEntity = name == null ? null : ResourceLocation.parse(name);
+
+            String owner = stack.get(SSDataComponentType.OWNER);
+            UUID ownerUUID = owner == null ? null : UUID.fromString(owner);
+
+            int kills = stack.getOrDefault(SSDataComponentType.KILLS, 0);
+            return new Binding(boundEntity, ownerUUID, kills);
         }
 
         return null;

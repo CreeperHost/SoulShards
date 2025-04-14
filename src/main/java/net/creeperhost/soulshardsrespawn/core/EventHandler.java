@@ -51,7 +51,7 @@ public class EventHandler
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().getType().is(Tags.EntityTypes.BOSSES)) return;
 
-        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntity().getPersistentData().getBoolean("cageBorn"))
+        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntity().getPersistentData().getBooleanOr("cageBorn", false))
             return;
 
         if (event.getSource().getEntity() instanceof Player player)
@@ -154,7 +154,7 @@ public class EventHandler
     @SubscribeEvent
     public static void dropExperience(LivingExperienceDropEvent event)
     {
-        if (!SoulShards.CONFIG.getBalance().shouldDropExperience() && event.getEntity().getPersistentData().getBoolean("cageBorn"))
+        if (!SoulShards.CONFIG.getBalance().shouldDropExperience() && event.getEntity().getPersistentData().getBooleanOr("cageBorn", false))
             event.setCanceled(true);
     }
 

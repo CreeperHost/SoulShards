@@ -109,9 +109,10 @@ public class SoulSpawnerLogic extends BaseSpawner {
                 double spawnX = pos.getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0 + 0.5;
                 double spawnY = pos.getY() + level.random.nextInt(3) - 1;
                 double spawnZ = pos.getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0 + 0.5;
-                entity.absMoveTo(spawnX, spawnY, spawnZ, 0, 0);
+                entity.setPos(spawnX, spawnY, spawnZ);
             } while (entity.blockPosition().getX() == tile.getBlockPos().getX() && entity.blockPosition().getZ() == tile.getBlockPos().getZ());
-            entity.moveTo(entity.getX(), entity.getY(), entity.getZ(), level.random.nextFloat() * 360.0F, 0.0F);
+            entity.setPos(entity.getX(), entity.getY(), entity.getZ());
+            entity.forceSetRotation(level.random.nextFloat() * 360.0F, 0.0F);
 
             if (attemptEntitySpawn(binding, type, entity, level, (float) entity.getX(), (float) entity.getY(), (float) entity.getZ())) {
                 entity.getPersistentData().putBoolean("cageBorn", true);
@@ -178,7 +179,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
     private boolean hasReachedSpawnCap(LivingEntity living) {
         BlockPos pos = tile.getBlockPos();
         AABB box = new AABB(pos.getX() - 16, pos.getY() - 16, pos.getZ() - 16, pos.getX() + 16, pos.getY() + 16, pos.getZ() + 16);
-        int mobCount = tile.getLevel().getEntitiesOfClass(living.getClass(), box, e -> e != null && e.getPersistentData().getBoolean("cageBorn")).size();
+        int mobCount = tile.getLevel().getEntitiesOfClass(living.getClass(), box, e -> e != null && e.getPersistentData().getBooleanOr("cageBorn", false)).size();
         return mobCount >= SoulShards.CONFIG.getBalance().getSpawnCap();
     }
 

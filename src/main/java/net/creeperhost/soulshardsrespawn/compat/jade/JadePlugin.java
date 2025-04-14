@@ -57,7 +57,7 @@ public class JadePlugin implements IWailaPlugin {
         registration.registerEntityComponent(new IEntityComponentProvider() {
             @Override
             public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig iPluginConfig) {
-                if (accessor.getServerData().getBoolean("cageBorn")) {
+                if (accessor.getServerData().getBooleanOr("cageBorn", false)) {
                     tooltip.add(Component.translatable("tooltip.soulshards.cage_born"));
                 }
             }
@@ -74,7 +74,11 @@ public class JadePlugin implements IWailaPlugin {
                 if (!accessor.getServerData().contains("binding")) {
                     return;
                 }
-                ItemStack stack = ItemStack.parseOptional(accessor.getLevel().registryAccess(), accessor.getServerData().getCompound("binding"));
+
+                ItemStack stack = accessor.getServerData().getCompound("binding")
+                        .map(tag -> ItemStack.parse(accessor.getLevel().registryAccess(), tag)
+                                .orElse(ItemStack.EMPTY))
+                        .orElseGet(() -> ItemStack.EMPTY);
                 if (stack.isEmpty() || !(stack.getItem() instanceof ItemSoulShard itemSoulShard)) {
                     return;
                 }
