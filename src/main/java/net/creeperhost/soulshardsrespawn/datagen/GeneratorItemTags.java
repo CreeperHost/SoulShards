@@ -30,5 +30,7 @@ public class GeneratorItemTags extends ItemTagsProvider
         tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
         tag(ItemTags.DURABILITY_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
         tag(SoulShardsAPI.SOUL_STEALER_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
+
+        tag(ItemTags.SWORDS).add(RegistrarSoulShards.VILE_SWORD.get());
     }
 }

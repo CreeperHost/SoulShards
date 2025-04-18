@@ -8,7 +8,15 @@ import net.creeperhost.soulshardsrespawn.item.ItemVileSword;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -31,6 +39,12 @@ public class RegistrarSoulShards
             }).icon(() ->  new ItemStack(RegistrarSoulShards.SOUL_SHARD.get())).title(Component.translatable("itemGroup.soulshards")).build());
 
     public static final DeferredRegister<BlockEntityType<?>> TILES_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, SoulShards.MODID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(Registries.ENCHANTMENT, SoulShards.MODID);
+
+//    public static final DeferredHolder<Enchantment, Enchantment> SOUL_STEALER = ENCHANTMENTS.register("soul_stealer", () -> Enchantment.enchantment().build());
+
+//    register(context, SWEEPING_EDGE, Enchantment.enchantment(Enchantment.definition(holdergetter2.getOrThrow(ItemTags.SWORD_ENCHANTABLE), 2, 3, Enchantment.dynamicCost(5, 9), Enchantment.dynamicCost(20, 9), 4, new EquipmentSlotGroup[]{EquipmentSlotGroup.MAINHAND})).withEffect(EnchantmentEffectComponents.ATTRIBUTES, new EnchantmentAttributeEffect(ResourceLocation.withDefaultNamespace("enchantment.sweeping_edge"), Attributes.SWEEPING_DAMAGE_RATIO, new LevelBasedValue.Fraction(LevelBasedValue.perLevel(1.0F), LevelBasedValue.perLevel(2.0F, 1.0F)), AttributeModifier.Operation.ADD_VALUE)));
+
 
     public static final DeferredHolder<Item, Item> VILE_DUST = ITEMS.registerItem("vile_dust", Item::new);
     public static final DeferredHolder<Item, Item> VILE_SWORD = ITEMS.registerItem("vile_sword", ItemVileSword::new);
