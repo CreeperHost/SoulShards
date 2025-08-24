@@ -146,7 +146,7 @@ public class EventHandler
                 ItemStack output = new ItemStack(RegistrarSoulShards.SOUL_SHARD.get());
                 ((ItemSoulShard) output.getItem()).updateBinding(output, left.addKills(right.getKills()));
                 event.setOutput(output);
-                event.setCost(left.getTier().getIndex() * 6);
+                event.setXpCost(left.getTier().getIndex() * 6);
             }
         }
     }

@@ -7,16 +7,14 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -108,44 +106,49 @@ public class TileEntitySoulCage extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.inventory.deserializeNBT(provider, tag.getCompoundOrEmpty("inventory"));
-        this.spawnDelay = tag.getIntOr("spawnDelay", -1);
-        this.active = tag.getBooleanOr("active", false);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.inventory.deserialize(input.childOrEmpty("inventory"));
+        this.spawnDelay = input.getIntOr("spawnDelay", -1);
+        this.active = input.getBooleanOr("active", false);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.put("inventory", inventory.serializeNBT(provider));
-        tag.putInt("spawnDelay", spawnDelay);
-        tag.putBoolean("active", active);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        inventory.serialize(output.child("inventory"));
+        output.putInt("spawnDelay", spawnDelay);
+        output.putBoolean("active", active);
     }
 
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
+//    @Nullable
+//    @Override
+//    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+//        return ClientboundBlockEntityDataPacket.create(this);
+//    }
 
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = super.getUpdateTag(provider);
-        tag.put("inventory", inventory.serializeNBT(provider));
-        tag.putShort("spawnDelay", (short) spawnDelay);
-        tag.putBoolean("active", active);
-        return tag;
-    }
+//    @Override
+//    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+//        CompoundTag tag = super.getUpdateTag(provider);
+//        tag.put("inventory", inventory.serializeNBT(provider));
+//        tag.putShort("spawnDelay", (short) spawnDelay);
+//        tag.putBoolean("active", active);
+//        return tag;
+//    }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = pkt.getTag();
-        if (tag == null) return;
-        this.inventory.deserializeNBT(lookupProvider, tag.getCompoundOrEmpty("inventory"));
-        this.spawnDelay = tag.getShortOr("spawnDelay", (short) -1);
-        this.active = tag.getBooleanOr("active", false);
-    }
+//    @Override
+//    public void onDataPacket(Connection net, ValueInput valueInput) {
+//        super.onDataPacket(net, valueInput);
+//    }
+
+//    @Override
+//    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+//        CompoundTag tag = pkt.getTag();
+//        if (tag == null) return;
+//        this.inventory.deserializeNBT(lookupProvider, tag.getCompoundOrEmpty("inventory"));
+//        this.spawnDelay = tag.getShortOr("spawnDelay", (short) -1);
+//        this.active = tag.getBooleanOr("active", false);
+//    }
 
 
     public ItemStackHandler getInventory() {

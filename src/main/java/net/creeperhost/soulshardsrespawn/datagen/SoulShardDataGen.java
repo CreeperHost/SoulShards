@@ -2,7 +2,6 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.LootTableProvider;
@@ -16,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = SoulShards.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SoulShards.MODID)
 public class SoulShardDataGen
 {
     @SubscribeEvent
@@ -31,7 +30,7 @@ public class SoulShardDataGen
         GeneratorBlockTags blockTags = new GeneratorBlockTags(generator.getPackOutput(), lookupProvider, SoulShards.MODID);
         generator.addProvider(true, blockTags);
 
-        GeneratorItemTags itemTags = new GeneratorItemTags(generator.getPackOutput(), lookupProvider, blockTags.contentsGetter());
+        GeneratorItemTags itemTags = new GeneratorItemTags(generator.getPackOutput(), lookupProvider);
         generator.addProvider(true, itemTags);
 
         //TODO, not sure why this is broken, so for now the tag has been added manually.

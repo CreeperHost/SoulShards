@@ -5,13 +5,18 @@ import net.creeperhost.soulshardsrespawn.block.BlockSoulCage;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
+
+import java.util.Optional;
 
 /**
  * Created by brandon3055 on 29/01/2024
@@ -41,7 +46,9 @@ public class JadePlugin implements IWailaPlugin {
             public void appendServerData(CompoundTag tag, BlockAccessor accessor) {
                 ItemStack binding = ((TileEntitySoulCage) accessor.getBlockEntity()).getInventory().getStackInSlot(0);
                 if (!binding.isEmpty()) {
-                    tag.put("binding", binding.save(accessor.getLevel().registryAccess()));
+                    RegistryAccess access = accessor.getLevel().registryAccess();
+                    Optional<Tag> opTag = ItemStack.OPTIONAL_CODEC.encodeStart(access.createSerializationContext(NbtOps.INSTANCE), binding).result();
+                    opTag.ifPresent(e -> tag.put("binding", e));
                 }
             }
 
@@ -75,10 +82,19 @@ public class JadePlugin implements IWailaPlugin {
                     return;
                 }
 
-                ItemStack stack = accessor.getServerData().getCompound("binding")
-                        .map(tag -> ItemStack.parse(accessor.getLevel().registryAccess(), tag)
-                                .orElse(ItemStack.EMPTY))
-                        .orElseGet(() -> ItemStack.EMPTY);
+                CompoundTag tag = accessor.getServerData().getCompoundOrEmpty("binding");
+                if (tag.isEmpty()) {
+                    return;
+                }
+
+                RegistryAccess access = accessor.getLevel().registryAccess();
+
+                Optional<ItemStack> result = ItemStack.OPTIONAL_CODEC.parse(access.createSerializationContext(NbtOps.INSTANCE), tag).result();
+                if (result.isEmpty()) {
+                    return;
+                }
+                ItemStack stack = result.orElse(ItemStack.EMPTY);
+
                 if (stack.isEmpty() || !(stack.getItem() instanceof ItemSoulShard itemSoulShard)) {
                     return;
                 }
