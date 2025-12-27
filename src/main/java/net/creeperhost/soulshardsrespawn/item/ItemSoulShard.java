@@ -11,9 +11,8 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,7 +65,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
 
             try
             {
-                ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(), mobSpawner.getBlockPos()).getType());
+                Identifier entityId = BuiltInRegistries.ENTITY_TYPE.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(), mobSpawner.getBlockPos()).getType());
                 if (!SoulShardsAPI.isAllowed(binding.getBoundEntity())) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
@@ -125,7 +123,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         if (binding.getBoundEntity() != null) {
             if (BuiltInRegistries.ENTITY_TYPE.containsKey(binding.getBoundEntity())) {
                 EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.getValue(binding.getBoundEntity());
-                ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);
+                Identifier resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(entityEntry);
                 consumer.accept(Component.translatable("tooltip.soulshards.bound", resourceLocation.toString()));
             }
         }

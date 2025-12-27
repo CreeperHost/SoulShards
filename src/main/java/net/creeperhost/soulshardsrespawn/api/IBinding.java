@@ -1,6 +1,6 @@
 package net.creeperhost.soulshardsrespawn.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,7 +12,7 @@ public interface IBinding
     UUID getOwner();
 
     @Nullable
-    ResourceLocation getBoundEntity();
+    Identifier getBoundEntity();
 
     int getKills();
 

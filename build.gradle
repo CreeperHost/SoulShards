@@ -134,7 +134,7 @@ dependencies {
 //    runtimeOnly "curse.maven:roughly-enough-items-310111:6414282"
 //    runtimeOnly "curse.maven:cloth-config-348521:6351757"
 
-    implementation "curse.maven:jade-324717:6902747"
+    implementation "curse.maven:jade-324717:7313008"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -1,6 +1,6 @@
 package net.creeperhost.soulshardsrespawn.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.Event;
 
@@ -63,7 +63,7 @@ public class BindingEvent extends Event
 
         private final LivingEntity entity;
         @Nullable
-        private ResourceLocation entityId;
+        private Identifier entityId;
 
         public GetEntityName(LivingEntity entity)
         {
@@ -76,12 +76,12 @@ public class BindingEvent extends Event
         }
 
         @Nullable
-        public ResourceLocation getEntityId()
+        public Identifier getEntityId()
         {
             return entityId;
         }
 
-        public void setEntityId(@Nullable ResourceLocation entityId)
+        public void setEntityId(@Nullable Identifier entityId)
         {
             this.entityId = entityId;
         }

@@ -2,7 +2,7 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +12,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
@@ -78,8 +78,8 @@ public class GeneratorRecipes extends RecipeProvider
     }
 
     protected <T extends AbstractCookingRecipe> void oreCooking(RecipeSerializer<T> serializer, AbstractCookingRecipe.Factory<T> recipeFactory, ItemLike input, RecipeCategory category, ItemLike result, float experience, int cookingTime, String group, String suffix) {
-        ResourceLocation key = BuiltInRegistries.ITEM.getKey(result.asItem());
-        ResourceKey<Recipe<?>> rskey = ResourceKey.create(Registries.RECIPE, ResourceLocation.fromNamespaceAndPath("soulshards", "smelting/" + key.getPath() + suffix));
+        Identifier key = BuiltInRegistries.ITEM.getKey(result.asItem());
+        ResourceKey<Recipe<?>> rskey = ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath("soulshards", "smelting/" + key.getPath() + suffix));
         SimpleCookingRecipeBuilder.generic(Ingredient.of(input), category, result, experience, cookingTime, serializer, recipeFactory).group(group).unlockedBy(getHasName(input), this.has(input)).save(this.output, rskey);
     }
 

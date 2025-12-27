@@ -6,7 +6,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -125,7 +125,7 @@ public class MultiblockPattern
         {
             JsonObject json = element.getAsJsonObject();
 
-            ResourceLocation itemId = ResourceLocation.parse(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
+            Identifier itemId = Identifier.parse(json.getAsJsonObject("catalyst").getAsJsonPrimitive("item").getAsString());
             ItemStack catalyst = new ItemStack(BuiltInRegistries.ITEM.getValue(itemId), 1);
 
             String[] shape = context.deserialize(json.getAsJsonArray("shape"), String[].class);
@@ -144,7 +144,7 @@ public class MultiblockPattern
                 if (!entry.isJsonPrimitive()) {
                     throw new JsonParseException("Found invalid block when parsing SoulShards multiblock file: " + entry + ", Expected String");
                 } else {
-                    for (BlockState possible : BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(entry.getAsString())).getStateDefinition().getPossibleStates()) {
+                    for (BlockState possible : BuiltInRegistries.BLOCK.getValue(Identifier.parse(entry.getAsString())).getStateDefinition().getPossibleStates()) {
                         if (possible.getBlock() instanceof SlabBlock && possible.getValue(SlabBlock.TYPE) != SlabType.DOUBLE) {
                             continue;
                         }

@@ -9,7 +9,7 @@ import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.creeperhost.soulshardsrespawn.core.util.JsonUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -29,9 +29,9 @@ public class SoulShards
     public static final String MODID = "soulshards";
     public static final File CONFIG_DIR = new File(FMLPaths.CONFIGDIR.get().toFile(), MODID);
     public static final ConfigSoulShards CONFIG = JsonUtil.fromJson(TypeToken.get(ConfigSoulShards.class), new File(CONFIG_DIR, MODID + ".json"), new ConfigSoulShards());
-    public static final ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(MODID, "soul_stealer"));
+    public static final ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(MODID, "soul_stealer"));
 
-    public static final TagKey<Item> CORRUPTED_INGOT = ItemTags.create(ResourceLocation.fromNamespaceAndPath(MODID, "ingots/corrupted"));
+    public static final TagKey<Item> CORRUPTED_INGOT = ItemTags.create(Identifier.fromNamespaceAndPath(MODID, "ingots/corrupted"));
 
     public SoulShards(IEventBus eventBus)
     {

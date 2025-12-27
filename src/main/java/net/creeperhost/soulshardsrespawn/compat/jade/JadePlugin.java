@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import snownee.jade.api.*;
@@ -24,8 +24,8 @@ import java.util.Optional;
 @WailaPlugin
 public class JadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation ENTITY_DATA_ID = ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "entity_data");
-    private static final ResourceLocation CAGE_DATA_ID = ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "cage_data");
+    private static final Identifier ENTITY_DATA_ID = Identifier.fromNamespaceAndPath(SoulShards.MODID, "entity_data");
+    private static final Identifier CAGE_DATA_ID = Identifier.fromNamespaceAndPath(SoulShards.MODID, "cage_data");
 
     @Override
     public void register(IWailaCommonRegistration registration) {
@@ -36,7 +36,7 @@ public class JadePlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid() {
+            public Identifier getUid() {
                 return ENTITY_DATA_ID;
             }
         }, LivingEntity.class);
@@ -53,7 +53,7 @@ public class JadePlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid() {
+            public Identifier getUid() {
                 return CAGE_DATA_ID;
             }
         }, TileEntitySoulCage.class);
@@ -70,7 +70,7 @@ public class JadePlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid() {
+            public Identifier getUid() {
                 return ENTITY_DATA_ID;
             }
         }, LivingEntity.class);
@@ -111,7 +111,7 @@ public class JadePlugin implements IWailaPlugin {
             }
 
             @Override
-            public ResourceLocation getUid() {
+            public Identifier getUid() {
                 return CAGE_DATA_ID;
             }
         }, BlockSoulCage.class);

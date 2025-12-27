@@ -23,7 +23,7 @@ public class GeneratorItemTags extends ItemTagsProvider
     {
         tag(SoulShards.CORRUPTED_INGOT).add(RegistrarSoulShards.CORRUPTED_INGOT.get());
 
-        tag(ItemTags.SWORD_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
+        tag(ItemTags.SWORDS).add(RegistrarSoulShards.VILE_SWORD.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
         tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
         tag(ItemTags.DURABILITY_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());

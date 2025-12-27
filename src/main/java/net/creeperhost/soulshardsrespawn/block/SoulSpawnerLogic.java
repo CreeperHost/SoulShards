@@ -7,7 +7,7 @@ import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
@@ -16,11 +16,8 @@ import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -30,7 +27,7 @@ import java.util.Map;
  * Created by brandon3055 on 11/01/2024
  */
 public class SoulSpawnerLogic extends BaseSpawner {
-    private static Map<ResourceLocation, Entity> RENDER_ENTITY_CACHE = new HashMap<>();
+    private static Map<Identifier, Entity> RENDER_ENTITY_CACHE = new HashMap<>();
 
     private final TileEntitySoulCage tile;
     private double mobRotation;
@@ -112,7 +109,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
                 entity.setPos(spawnX, spawnY, spawnZ);
             } while (entity.blockPosition().getX() == tile.getBlockPos().getX() && entity.blockPosition().getZ() == tile.getBlockPos().getZ());
             entity.setPos(entity.getX(), entity.getY(), entity.getZ());
-            entity.forceSetRotation(level.random.nextFloat() * 360.0F, 0.0F);
+            entity.forceSetRotation(level.random.nextFloat() * 360.0F, false, 0.0F, false);
 
             if (attemptEntitySpawn(binding, type, entity, level, (float) entity.getX(), (float) entity.getY(), (float) entity.getZ())) {
                 entity.getPersistentData().putBoolean("cageBorn", true);
@@ -192,7 +189,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
     @Override
     public Entity getOrCreateDisplayEntity(Level level, BlockPos pos) {
         if (tile.getBinding() == null) return null;
-        ResourceLocation key = tile.getBinding().getBoundEntity();
+        Identifier key = tile.getBinding().getBoundEntity();
         if (key == null) return null;
         return RENDER_ENTITY_CACHE.computeIfAbsent(key, name -> {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(name);
@@ -203,16 +200,10 @@ public class SoulSpawnerLogic extends BaseSpawner {
     }
 
     @Override
-    @OnlyIn (Dist.CLIENT)
     public double getSpin() {
         return mobRotation;
     }
 
-    @Override
-    @OnlyIn (Dist.CLIENT)
-    public double getoSpin() {
-        return prevMobRotation;
-    }
 
     @Override
     public void broadcastEvent(Level level, BlockPos blockPos, int event) {

@@ -12,8 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public class EventHandler
         if (!SoulShards.CONFIG.getBalance().allowFakePlayers() && event.getSource().getEntity() instanceof FakePlayer)
             return;
 
-        ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
+        Identifier resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
         if (!SoulShardsAPI.isAllowed(resourceLocation)) return;
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().getType().is(Tags.EntityTypes.BOSSES)) return;
@@ -59,7 +59,7 @@ public class EventHandler
 
             BindingEvent.GetEntityName getEntityName = new BindingEvent.GetEntityName(event.getEntity());
             NeoForge.EVENT_BUS.post(getEntityName);
-            ResourceLocation entityId = getEntityName.getEntityId() == null ? BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType()) : getEntityName.getEntityId();
+            Identifier entityId = getEntityName.getEntityId() == null ? BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType()) : getEntityName.getEntityId();
 
             ItemStack shardItem = getFirstShard(player, entityId);
             if (shardItem.isEmpty()) return;
@@ -92,7 +92,7 @@ public class EventHandler
 
             if (binding.getBoundEntity() == null) binding.setBoundEntity(entityId);
 
-            if (binding.getOwner() == null) binding.setOwner(player.getGameProfile().getId());
+            if (binding.getOwner() == null) binding.setOwner(player.getUUID());
 
             soulShard.updateBinding(shardItem, binding.addKills(gainSouls.getAmount()));
             if (newItem) // Give the player the peeled off stack
@@ -102,7 +102,7 @@ public class EventHandler
 
     public static Holder<Enchantment> getEnchantment(Level level)
     {
-        ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(SoulShards.MODID, "soul_stealer"));
+        ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(SoulShards.MODID, "soul_stealer"));
 
         return level.registryAccess().lookup(Registries.ENCHANTMENT).get().get(SOUL_STEALER).get();
 //        return level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolder(SOUL_STEALER).get();
@@ -159,7 +159,7 @@ public class EventHandler
     }
 
     @Nonnull
-    public static ItemStack getFirstShard(Player player, ResourceLocation entityId)
+    public static ItemStack getFirstShard(Player player, Identifier entityId)
     {
         // Checks the offhand first
         ItemStack shardItem = player.getItemInHand(InteractionHand.OFF_HAND);
