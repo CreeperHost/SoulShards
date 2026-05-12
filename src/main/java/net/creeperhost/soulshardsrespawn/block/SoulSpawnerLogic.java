@@ -46,9 +46,9 @@ public class SoulSpawnerLogic extends BaseSpawner {
         if (!tile.isActive()) {
             this.prevMobRotation = this.mobRotation;
         } else {
-            double d3 = (float) pos.getX() + level.random.nextFloat();
-            double d4 = (float) pos.getY() + level.random.nextFloat();
-            double d5 = (float) pos.getZ() + level.random.nextFloat();
+            double d3 = (float) pos.getX() + level.getRandom().nextFloat();
+            double d4 = (float) pos.getY() + level.getRandom().nextFloat();
+            double d5 = (float) pos.getZ() + level.getRandom().nextFloat();
             level.addParticle(ParticleTypes.SMOKE, d3, d4, d5, 0.0D, 0.0D, 0.0D);
             level.addParticle(ParticleTypes.FLAME, d3, d4, d5, 0.0D, 0.0D, 0.0D);
 
@@ -103,13 +103,13 @@ public class SoulSpawnerLogic extends BaseSpawner {
             }
 
             do {
-                double spawnX = pos.getX() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0 + 0.5;
-                double spawnY = pos.getY() + level.random.nextInt(3) - 1;
-                double spawnZ = pos.getZ() + (level.random.nextDouble() - level.random.nextDouble()) * 4.0 + 0.5;
+                double spawnX = pos.getX() + (level.getRandom().nextDouble() - level.getRandom().nextDouble()) * 4.0 + 0.5;
+                double spawnY = pos.getY() + level.getRandom().nextInt(3) - 1;
+                double spawnZ = pos.getZ() + (level.getRandom().nextDouble() - level.getRandom().nextDouble()) * 4.0 + 0.5;
                 entity.setPos(spawnX, spawnY, spawnZ);
             } while (entity.blockPosition().getX() == tile.getBlockPos().getX() && entity.blockPosition().getZ() == tile.getBlockPos().getZ());
             entity.setPos(entity.getX(), entity.getY(), entity.getZ());
-            entity.forceSetRotation(level.random.nextFloat() * 360.0F, false, 0.0F, false);
+            entity.forceSetRotation(level.getRandom().nextFloat() * 360.0F, false, 0.0F, false);
 
             if (attemptEntitySpawn(binding, type, entity, level, (float) entity.getX(), (float) entity.getY(), (float) entity.getZ())) {
                 entity.getPersistentData().putBoolean("cageBorn", true);
@@ -138,7 +138,7 @@ public class SoulSpawnerLogic extends BaseSpawner {
         }
         BlockPos blockpos = BlockPos.containing(x, y, z);
 
-        if (binding.getTier().checkLight() && entity instanceof Monster && !Monster.isDarkEnoughToSpawn(level, blockpos, level.random)) {
+        if (binding.getTier().checkLight() && entity instanceof Monster && !Monster.isDarkEnoughToSpawn(level, blockpos, level.getRandom())) {
             return false;
         }
 

@@ -1,7 +1,8 @@
 package net.creeperhost.soulshardsrespawn;
 
 import com.google.gson.reflect.TypeToken;
-import dev.architectury.platform.Platform;
+import net.creeperhost.polylib.event.events.server.PolyServerLifecycleEvents;
+import net.creeperhost.polylib.platform.Services;
 import net.creeperhost.soulshardsrespawn.client.ClientInit;
 import net.creeperhost.soulshardsrespawn.core.ConfigSoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
@@ -36,16 +37,18 @@ public class SoulShards
     public SoulShards(IEventBus eventBus)
     {
         Tier.readTiers();
+        SSDataComponentType.COMPONENTS.register(eventBus);
         RegistrarSoulShards.ITEMS.register(eventBus);
         RegistrarSoulShards.BLOCKS.register(eventBus);
         RegistrarSoulShards.ENCHANTMENTS.register(eventBus);
         RegistrarSoulShards.TILES_ENTITIES.register(eventBus);
-        SSDataComponentType.COMPONENTS.register(eventBus);
         RegistrarSoulShards.CREATIVE_TAB.register(eventBus);
-        if(Platform.getEnv().isClient())
+        if(Services.PLATFORM.isClient())
         {
             ClientInit.init(eventBus);
         }
-        ConfigSoulShards.handleMultiblock();//Ensure multiblock config is loaded on startup
+        PolyServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            ConfigSoulShards.handleMultiblock();//Ensure multiblock config is loaded on startup
+        });
     }
 }

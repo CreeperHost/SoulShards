@@ -45,7 +45,7 @@ public class RegistrarSoulShards
     public static final DeferredHolder<Item, Item> CORRUPTED_INGOT = ITEMS.registerItem("corrupted_ingot", Item::new);
     public static final DeferredHolder<Item, Item> SOUL_SHARD = ITEMS.registerItem("soul_shard", ItemSoulShard::new);
 
-    public static final DeferredHolder<Block, Block> SOUL_CAGE = BLOCKS.registerBlock("soul_cage", BlockSoulCage::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F).noOcclusion());
+    public static final DeferredHolder<Block, Block> SOUL_CAGE = BLOCKS.registerBlock("soul_cage", BlockSoulCage::new);
     public static final DeferredHolder<Item, Item> SOUL_CAGE_ITEM = ITEMS.registerItem("soul_cage", (props) -> new BlockItem(SOUL_CAGE.get(), props));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TileEntitySoulCage>> SOUL_CAGE_TE = TILES_ENTITIES.register("soul_cage", () -> new BlockEntityType<>(TileEntitySoulCage::new, SOUL_CAGE.get()));

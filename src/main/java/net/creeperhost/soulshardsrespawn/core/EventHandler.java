@@ -47,9 +47,9 @@ public class EventHandler
             return;
 
         Identifier resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
-        if (!SoulShardsAPI.isAllowed(resourceLocation)) return;
+        if (!SoulShardsAPI.isAllowed(event.getEntity().level(), resourceLocation)) return;
 
-        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().getType().is(Tags.EntityTypes.BOSSES)) return;
+        if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().is(Tags.EntityTypes.BOSSES)) return;
 
         if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntity().getPersistentData().getBooleanOr("cageBorn", false))
             return;
@@ -105,7 +105,6 @@ public class EventHandler
         ResourceKey<Enchantment> SOUL_STEALER = ResourceKey.create(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(SoulShards.MODID, "soul_stealer"));
 
         return level.registryAccess().lookup(Registries.ENCHANTMENT).get().get(SOUL_STEALER).get();
-//        return level.registryAccess().registry(Registries.ENCHANTMENT).get().getHolder(SOUL_STEALER).get();
     }
 
     @SubscribeEvent

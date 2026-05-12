@@ -74,7 +74,7 @@ public class TileEntitySoulCage extends BlockEntity {
 
         if (SoulShards.CONFIG.getBalance().requireOwnerOnline() && !ownerOnline()) return false;
 
-        if (!SoulShardsAPI.isAllowed(binding.getBoundEntity())) return false;
+        if (!SoulShardsAPI.isAllowed(level, binding.getBoundEntity())) return false;
 
         if (!SoulShards.CONFIG.getBalance().requireRedstoneSignal()) {
             if (state.getValue(BlockSoulCage.POWERED) && tier.checkRedstone()) return false;
@@ -121,36 +121,6 @@ public class TileEntitySoulCage extends BlockEntity {
         output.putBoolean("active", active);
     }
 
-//    @Nullable
-//    @Override
-//    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-//        return ClientboundBlockEntityDataPacket.create(this);
-//    }
-
-//    @Override
-//    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-//        CompoundTag tag = super.getUpdateTag(provider);
-//        tag.put("inventory", inventory.serializeNBT(provider));
-//        tag.putShort("spawnDelay", (short) spawnDelay);
-//        tag.putBoolean("active", active);
-//        return tag;
-//    }
-
-//    @Override
-//    public void onDataPacket(Connection net, ValueInput valueInput) {
-//        super.onDataPacket(net, valueInput);
-//    }
-
-//    @Override
-//    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-//        CompoundTag tag = pkt.getTag();
-//        if (tag == null) return;
-//        this.inventory.deserializeNBT(lookupProvider, tag.getCompoundOrEmpty("inventory"));
-//        this.spawnDelay = tag.getShortOr("spawnDelay", (short) -1);
-//        this.active = tag.getBooleanOr("active", false);
-//    }
-
-
     public ItemStackHandler getInventory() {
         return inventory;
     }
@@ -183,7 +153,7 @@ public class TileEntitySoulCage extends BlockEntity {
             if (!(stack.getItem() instanceof ItemSoulShard)) return stack;
 
             Binding binding = ((ItemSoulShard) stack.getItem()).getBinding(stack);
-            if (binding == null || binding.getBoundEntity() == null || !SoulShardsAPI.isAllowed(binding.getBoundEntity()))
+            if (binding == null || binding.getBoundEntity() == null)
                 return stack;
 
             return super.insertItem(slot, stack, simulate);

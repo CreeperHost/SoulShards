@@ -54,7 +54,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
         {
             if (!SoulShards.CONFIG.getBalance().allowSpawnerAbsorption())
             {
-                context.getPlayer().displayClientMessage(Component.translatable("chat.soulshards.absorb_disabled"), false);
+                context.getPlayer().sendSystemMessage(Component.translatable("chat.soulshards.absorb_disabled"));
                 return InteractionResult.PASS;
             }
 
@@ -66,7 +66,7 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             try
             {
                 Identifier entityId = BuiltInRegistries.ENTITY_TYPE.getKey(mobSpawner.getSpawner().getOrCreateDisplayEntity(context.getLevel(), mobSpawner.getBlockPos()).getType());
-                if (!SoulShardsAPI.isAllowed(binding.getBoundEntity())) return InteractionResult.PASS;
+                if (!SoulShardsAPI.isAllowed(context.getLevel(), binding.getBoundEntity())) return InteractionResult.PASS;
 
                 if (entityId == null || binding.getBoundEntity() == null || !binding.getBoundEntity().equals(entityId))
                     return InteractionResult.FAIL;
