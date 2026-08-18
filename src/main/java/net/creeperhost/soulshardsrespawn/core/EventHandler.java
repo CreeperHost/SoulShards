@@ -30,7 +30,6 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -96,7 +95,7 @@ public class EventHandler
 
             soulShard.updateBinding(shardItem, binding.addKills(gainSouls.getAmount()));
             if (newItem) // Give the player the peeled off stack
-                ItemHandlerHelper.giveItemToPlayer(player, shardItem);
+                player.getInventory().placeItemBackInInventory(shardItem);
         }
     }
 
@@ -125,7 +124,7 @@ public class EventHandler
         }
 
         held.shrink(1);
-        ItemHandlerHelper.giveItemToPlayer(event.getEntity(), new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()));
+        event.getEntity().getInventory().placeItemBackInInventory(new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()));
     }
 
     @SubscribeEvent

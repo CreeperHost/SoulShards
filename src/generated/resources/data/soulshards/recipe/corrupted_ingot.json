@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "soulshards",
   "key": {
     "C": "soulshards:corrupted_essence",
@@ -13,7 +12,6 @@
     "CVC"
   ],
   "result": {
-    "count": 1,
     "id": "soulshards:corrupted_ingot"
   }
 }

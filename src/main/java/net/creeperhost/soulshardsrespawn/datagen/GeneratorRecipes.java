@@ -2,7 +2,7 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -27,9 +27,8 @@ public class GeneratorRecipes extends RecipeProvider
 
     @Override
     protected void buildRecipes() {
-        //TODO
-//        oreCooking(RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, Items.SOUL_SAND, RecipeCategory.MISC, RegistrarSoulShards.VILE_DUST.get(), 1.0f, 200, SoulShards.MODID, "_from_soul_sand");
-//        oreCooking(RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, Items.SOUL_SOIL, RecipeCategory.MISC, RegistrarSoulShards.VILE_DUST.get(), 1.0f, 200, SoulShards.MODID, "_from_soul_soil");
+        oreCooking(Items.SOUL_SAND, RecipeCategory.MISC, RegistrarSoulShards.VILE_DUST.get(), 1.0f, 200, SoulShards.MODID, "_from_soul_sand");
+        oreCooking(Items.SOUL_SOIL, RecipeCategory.MISC, RegistrarSoulShards.VILE_DUST.get(), 1.0f, 200, SoulShards.MODID, "_from_soul_soil");
 
         shaped(RecipeCategory.MISC, RegistrarSoulShards.VILE_SWORD.get())
                 .pattern(" I ")
@@ -78,11 +77,13 @@ public class GeneratorRecipes extends RecipeProvider
                 .save(output);
     }
 
-    protected <T extends AbstractCookingRecipe> void oreCooking(RecipeSerializer<T> serializer, AbstractCookingRecipe.Factory<T> recipeFactory, ItemLike input, RecipeCategory category, ItemLike result, float experience, int cookingTime, String group, String suffix) {
+    protected void oreCooking(ItemLike input, RecipeCategory category, ItemLike result, float experience, int cookingTime, String group, String suffix) {
         Identifier key = BuiltInRegistries.ITEM.getKey(result.asItem());
         ResourceKey<Recipe<?>> rskey = ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath("soulshards", "smelting/" + key.getPath() + suffix));
-        //TODO
-//        SimpleCookingRecipeBuilder.generic(Ingredient.of(input), category, result, experience, cookingTime, serializer, recipeFactory).group(group).unlockedBy(getHasName(input), this.has(input)).save(this.output, rskey);
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(input), category, CookingBookCategory.MISC, result, experience, cookingTime)
+                .group(group)
+                .unlockedBy(getHasName(input), this.has(input))
+                .save(this.output, rskey);
     }
 
     public static class Runner extends RecipeProvider.Runner {

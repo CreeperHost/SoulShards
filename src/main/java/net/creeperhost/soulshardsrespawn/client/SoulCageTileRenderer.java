@@ -1,54 +1,31 @@
 package net.creeperhost.soulshardsrespawn.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.creeperhost.soulshardsrespawn.block.SoulSpawnerLogic;
 import net.creeperhost.soulshardsrespawn.block.TileEntitySoulCage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.blockentity.SpawnerRenderer;
+import net.minecraft.client.renderer.blockentity.TrialSpawnerRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.util.Mth;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Created by brandon3055 on 12/01/2024
  */
 public class SoulCageTileRenderer implements BlockEntityRenderer<TileEntitySoulCage, SoulCageRenderState> {
+    private final EntityRenderDispatcher entityRenderer;
 
-    public SoulCageTileRenderer(BlockEntityRendererProvider.Context context) {}
-
-//    @Override
-//    public void render(TileEntitySoulCage tile, float partialTicks, PoseStack stack, MultiBufferSource buffers, int packedLight, int packedOverlay, Vec3 vec3) {
-//        SoulSpawnerLogic spawnerLogic = tile.spawnerLogic;
-//        stack.pushPose();
-//        stack.translate(0.5D, 0.0D, 0.5D);
-//        Entity entity = spawnerLogic.getOrCreateDisplayEntity(tile.getLevel(), tile.getBlockPos());
-//        if (entity != null) {
-//            float f = 0.53125F;
-//            float f1 = Math.max(entity.getBbWidth(), entity.getBbHeight());
-//            if ((double) f1 > 1.0D) {
-//                f /= f1;
-//            }
-//
-//            stack.translate(0.0D, 0.4F, 0.0D);
-//            stack.mulPose(Axis.YP.rotationDegrees((float) Mth.lerp(partialTicks, spawnerLogic.getoSpin(), spawnerLogic.getSpin()) * 10.0F));
-//            stack.translate(0.0D, -0.2F, 0.0D);
-//            stack.mulPose(Axis.XP.rotationDegrees(-30.0F));
-//            stack.scale(f, f, f);
-//            Minecraft.getInstance().getEntityRenderDispatcher().render(entity, 0.0, 0.0, 0.0, partialTicks, stack, buffers, packedLight);
-//        }
-//        stack.popPose();
-//
-//        stack.translate(0.5, 1F-(1F/32F), 0.5);
-//        stack.scale(0.75F, 0.75F, 0.75F);
-//        stack.mulPose(Axis.XP.rotationDegrees(90.0F));
-//    }
-
+    public SoulCageTileRenderer(BlockEntityRendererProvider.Context context) {
+        this.entityRenderer = context.entityRenderer();
+    }
 
     @Override
     public SoulCageRenderState createRenderState()
@@ -57,8 +34,46 @@ public class SoulCageTileRenderer implements BlockEntityRenderer<TileEntitySoulC
     }
 
     @Override
-    public void submit(SoulCageRenderState soulCageRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, net.minecraft.client.renderer.state.level.CameraRenderState cameraRenderState) {
-
+    public void extractRenderState(
+            TileEntitySoulCage tile,
+            SoulCageRenderState state,
+            float partialTicks,
+            Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress
+    ) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
+        if (tile.getLevel() != null) {
+            SoulSpawnerLogic spawnerLogic = tile.spawnerLogic;
+            Entity displayEntity = spawnerLogic.getOrCreateDisplayEntity(tile.getLevel(), tile.getBlockPos());
+            TrialSpawnerRenderer.extractSpawnerData(
+                    state,
+                    partialTicks,
+                    displayEntity,
+                    this.entityRenderer,
+                    spawnerLogic.getOSpin(),
+                    spawnerLogic.getSpin()
+            );
+        }
     }
 
+    @Override
+    public void submit(SoulCageRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        if (state.displayEntity != null) {
+            SpawnerRenderer.submitEntityInSpawner(
+                    poseStack,
+                    submitNodeCollector,
+                    state.displayEntity,
+                    this.entityRenderer,
+                    state.spin,
+                    state.scale,
+                    cameraRenderState
+            );
+        }
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(TileEntitySoulCage tile) {
+        BlockPos pos = tile.getBlockPos();
+        return new AABB(pos.getX() - 1.0, pos.getY() - 1.0, pos.getZ() - 1.0, pos.getX() + 2.0, pos.getY() + 2.0, pos.getZ() + 2.0);
+    }
 }

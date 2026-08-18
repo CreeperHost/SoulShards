@@ -9,7 +9,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
@@ -31,7 +31,7 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
 {
     public static final Component TITLE = Component.translatable("jei.soulshards.soul_shard.title");
 
-    public static final RecipeType<MultiblockCategory.Recipe> SOUL_SHARD_CRAFTING = RecipeType.create(SoulShards.MODID, "soulshardcrafting", MultiblockCategory.Recipe.class);
+    public static final IRecipeType<MultiblockCategory.Recipe> SOUL_SHARD_CRAFTING = IRecipeType.create(SoulShards.MODID, "soulshardcrafting", MultiblockCategory.Recipe.class);
 
     private final IGuiHelper iGuiHelper;
     private final IDrawable multiblock;
@@ -50,7 +50,7 @@ public class MultiblockCategory implements IRecipeCategory<MultiblockCategory.Re
     }
 
     @Override
-    public @NotNull RecipeType<Recipe> getRecipeType()
+    public @NotNull IRecipeType<Recipe> getRecipeType()
     {
         return SOUL_SHARD_CRAFTING;
     }

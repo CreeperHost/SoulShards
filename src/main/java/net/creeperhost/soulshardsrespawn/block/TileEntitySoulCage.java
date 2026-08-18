@@ -7,7 +7,10 @@ import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.creeperhost.soulshardsrespawn.core.data.Binding;
 import net.creeperhost.soulshardsrespawn.item.ItemSoulShard;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +37,7 @@ public class TileEntitySoulCage extends BlockEntity {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
+                syncToClient();
                 super.onContentsChanged(slot);
             }
         };
@@ -111,6 +115,7 @@ public class TileEntitySoulCage extends BlockEntity {
         this.inventory.deserialize(input.childOrEmpty("inventory"));
         this.spawnDelay = input.getIntOr("spawnDelay", -1);
         this.active = input.getBooleanOr("active", false);
+        updateBinding();
     }
 
     @Override
@@ -119,6 +124,22 @@ public class TileEntitySoulCage extends BlockEntity {
         inventory.serialize(output.child("inventory"));
         output.putInt("spawnDelay", spawnDelay);
         output.putBoolean("active", active);
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveCustomOnly(registries);
+    }
+
+    private void syncToClient() {
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.getChunkSource().blockChanged(worldPosition);
+        }
     }
 
     public ItemStackHandler getInventory() {
@@ -139,7 +160,7 @@ public class TileEntitySoulCage extends BlockEntity {
     public boolean ownerOnline() {
         Binding binding = getBinding();
         //noinspection ConstantConditions
-        return binding != null && binding.getOwner() != null && level.getServer().getPlayerList().getPlayer(binding.getOwner()) == null;
+        return binding != null && binding.getOwner() != null && level.getServer().getPlayerList().getPlayer(binding.getOwner()) != null;
     }
 
     public static class SoulCageInventory extends ItemStackHandler {

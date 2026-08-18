@@ -18,6 +18,6 @@ public class GeneratorBlockTags extends BlockTagsProvider
     @Override
     protected void addTags(HolderLookup.Provider provider)
     {
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(RegistrarSoulShards.SOUL_CAGE.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(RegistrarSoulShards.SOUL_CAGE.getKey());
     }
 }

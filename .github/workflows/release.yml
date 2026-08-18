@@ -1,0 +1,84 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - '26.2-*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: soulshards-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSE_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      CURSEFORGE_PROJECT_ID: '551523'
+      MODRINTH_PROJECT_ID: 'HQ1TzzI6'
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v6
+
+      - name: Validate release inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="26.2-$(sed -n 's/^mod_version=//p' gradle.properties)"
+          test "${GITHUB_REF_NAME}" = "${expected}"
+          test -n "${CURSEFORGE_PROJECT_ID}"
+          test -n "${MODRINTH_PROJECT_ID}"
+          test -n "${CURSEFORGE_TOKEN}"
+          test -n "${MODRINTH_TOKEN}"
+
+      - name: Add marketplace identities to release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq --arg curseforge "${CURSEFORGE_PROJECT_ID}" \
+             --arg modrinth "${MODRINTH_PROJECT_ID}" \
+             '.projects.curseforge = $curseforge |
+              .projects.modrinth = $modrinth |
+              .preferredDownload = "curseforge"' \
+             .modpacksch.json > .modpacksch.release.json
+          mv .modpacksch.release.json .modpacksch.json
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Prepare release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^mod_version=//p' gradle.properties)"
+          awk -v header="## ${version}" '
+            $0 == header { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          test -s release-notes.md
+          {
+            echo 'SOULSHARDS_CHANGELOG<<__CHANGELOG__'
+            cat release-notes.md
+            echo '__CHANGELOG__'
+          } >> "${GITHUB_ENV}"
+
+      - name: Build, test and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew clean build publishMods --no-daemon

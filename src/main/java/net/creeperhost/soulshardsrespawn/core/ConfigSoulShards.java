@@ -42,7 +42,7 @@ public class ConfigSoulShards
         File multiblockFile = new File(SoulShards.CONFIG_DIR, "multiblock.json");
         if (!multiblockFile.exists()) {
             try {
-                FileUtils.copyInputStreamToFile(Objects.requireNonNull(ConfigSoulShards.class.getResourceAsStream("/data/multiblock.json")), multiblockFile);
+                FileUtils.copyInputStreamToFile(Objects.requireNonNull(ConfigSoulShards.class.getResourceAsStream("/data/soulshards/multiblock.json")), multiblockFile);
             } catch (Throwable e) {
                 SoulShards.LOGGER.error("Failed to load default multiblock config", e);
             }

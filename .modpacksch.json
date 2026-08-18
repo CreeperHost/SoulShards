@@ -1,0 +1,18 @@
+{
+  "$schema": "https://modpacks.ch/schemas/project-link-v1.json",
+  "version": 1,
+  "projects": {
+    "github": "CreeperHost/SoulShards",
+    "curseforge": "551523",
+    "modrinth": "HQ1TzzI6"
+  },
+  "preferredDownload": "curseforge",
+  "destinations": [
+    {
+      "platform": "github",
+      "releases": true,
+      "manifestAsset": "modpacksch-release.json"
+    }
+  ],
+  "visibility": "listed"
+}

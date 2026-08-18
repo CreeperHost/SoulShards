@@ -21,14 +21,12 @@ public class GeneratorItemTags extends ItemTagsProvider
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider)
     {
-        tag(SoulShards.CORRUPTED_INGOT).add(RegistrarSoulShards.CORRUPTED_INGOT.get());
+        tag(SoulShards.CORRUPTED_INGOT).add(RegistrarSoulShards.CORRUPTED_INGOT.getKey());
 
-        tag(ItemTags.SWORDS).add(RegistrarSoulShards.VILE_SWORD.get());
-        tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
-        tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
-        tag(ItemTags.DURABILITY_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
-        tag(SoulShardsAPI.SOUL_STEALER_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.get());
-
-        tag(ItemTags.SWORDS).add(RegistrarSoulShards.VILE_SWORD.get());
+        tag(ItemTags.SWORDS).add(RegistrarSoulShards.VILE_SWORD.getKey());
+        tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.getKey());
+        tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.getKey());
+        tag(ItemTags.DURABILITY_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.getKey());
+        tag(SoulShardsAPI.SOUL_STEALER_ENCHANTABLE).add(RegistrarSoulShards.VILE_SWORD.getKey());
     }
 }

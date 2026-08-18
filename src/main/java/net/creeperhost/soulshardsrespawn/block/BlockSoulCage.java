@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
@@ -69,7 +68,7 @@ public class BlockSoulCage extends Block implements EntityBlock
         ItemStack stack = cage.getInventory().extractItem(0, 1, false);
         if (stack.isEmpty()) return InteractionResult.PASS;
 
-        ItemHandlerHelper.giveItemToPlayer(player, stack);
+        player.getInventory().placeItemBackInInventory(stack);
         return InteractionResult.SUCCESS;
     }
 

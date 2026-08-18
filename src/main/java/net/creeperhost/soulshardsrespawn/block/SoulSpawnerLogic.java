@@ -20,18 +20,17 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by brandon3055 on 11/01/2024
  */
 public class SoulSpawnerLogic extends BaseSpawner {
-    private static Map<Identifier, Entity> RENDER_ENTITY_CACHE = new HashMap<>();
-
     private final TileEntitySoulCage tile;
     private double mobRotation;
     private double prevMobRotation;
+    @Nullable
+    private Identifier displayEntityKey;
+    @Nullable
+    private Entity displayEntity;
 
     public SoulSpawnerLogic(TileEntitySoulCage tile) {
         this.tile = tile;
@@ -188,20 +187,42 @@ public class SoulSpawnerLogic extends BaseSpawner {
     @Nullable
     @Override
     public Entity getOrCreateDisplayEntity(Level level, BlockPos pos) {
-        if (tile.getBinding() == null) return null;
-        Identifier key = tile.getBinding().getBoundEntity();
-        if (key == null) return null;
-        return RENDER_ENTITY_CACHE.computeIfAbsent(key, name -> {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(name);
-            Entity entity = type.create(level, EntitySpawnReason.SPAWNER);
-            if (entity == null) return EntityType.PIG.create(level, EntitySpawnReason.SPAWNER);
-            return entity;
-        });
+        Binding binding = tile.getBinding();
+        Identifier key = binding == null ? null : binding.getBoundEntity();
+        if (key == null) {
+            displayEntityKey = null;
+            displayEntity = null;
+            return null;
+        }
+
+        if (displayEntity != null && key.equals(displayEntityKey) && displayEntity.level() == level) {
+            return displayEntity;
+        }
+
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(key);
+        Entity entity = type == null ? null : type.create(level, EntitySpawnReason.SPAWNER);
+        if (entity == null) {
+            entity = EntityTypes.PIG.create(level, EntitySpawnReason.SPAWNER);
+        }
+        if (entity == null) {
+            displayEntityKey = null;
+            displayEntity = null;
+            return null;
+        }
+
+        displayEntityKey = key;
+        displayEntity = BaseSpawner.SET_DISPLAY_ENTITY_ID.process(entity);
+        return displayEntity;
     }
 
     @Override
     public double getSpin() {
         return mobRotation;
+    }
+
+    @Override
+    public double getOSpin() {
+        return prevMobRotation;
     }
 
 

@@ -4,7 +4,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -16,6 +15,6 @@ public class SoulShardsAPI
     public static boolean isAllowed(Level level, Identifier resourceLocation)
     {
         EntityType<?> entityEntry = BuiltInRegistries.ENTITY_TYPE.getValue(resourceLocation);
-        return !entityEntry.create(level, EntitySpawnReason.SPAWNER).is(SOULSHARDS_DENYLIST);
+        return entityEntry != null && !entityEntry.builtInRegistryHolder().is(SOULSHARDS_DENYLIST);
     }
 }

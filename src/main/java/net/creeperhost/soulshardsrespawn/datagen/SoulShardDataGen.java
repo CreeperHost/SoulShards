@@ -41,7 +41,7 @@ public class SoulShardDataGen
                 List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
 
         generator.addProvider(true, new GeneratorLanguage(generator));
-        //TODO, not sure whats up with this either. Seems to be exploding due to the vanilla models being registered in the background, and I cant seem to prevent that.
+        // Item models are maintained in src/main/resources because this provider also enumerates vanilla registrations.
 //        generator.addProvider(true, new GeneratorModels(generator.getPackOutput()));
     }
 

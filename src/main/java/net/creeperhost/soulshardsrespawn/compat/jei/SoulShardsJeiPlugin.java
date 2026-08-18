@@ -31,7 +31,7 @@ public class SoulShardsJeiPlugin implements IModPlugin
     @Override
     public void registerRecipeCatalysts(@NotNull IRecipeCatalystRegistration registration)
     {
-        registration.addRecipeCatalyst(new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()), MultiblockCategory.SOUL_SHARD_CRAFTING);
+        registration.addCraftingStation(MultiblockCategory.SOUL_SHARD_CRAFTING, RegistrarSoulShards.SOUL_SHARD.get());
     }
 
     @Override
