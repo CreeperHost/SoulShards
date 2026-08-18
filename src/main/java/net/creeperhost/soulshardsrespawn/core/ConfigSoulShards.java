@@ -65,6 +65,7 @@ public class ConfigSoulShards
         private int absorptionBonus;
         private boolean allowBossSpawns;
         private boolean countCageBornForShard;
+        private boolean countVanillaSpawnerBornForShard = true;
         private boolean requireOwnerOnline;
         private boolean requireRedstoneSignal;
         private boolean allowShardCombination;
@@ -73,11 +74,17 @@ public class ConfigSoulShards
 
         public ConfigBalance(boolean allowSpawnerAbsorption, boolean allowFakePlayers, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap, boolean dropExperience)
         {
+            this(allowSpawnerAbsorption, allowFakePlayers, absorptionBonus, allowBossSpawns, countCageBornForShard, true, requireOwnerOnline, requireRedstoneSignal, allowShardCombination, spawnCap, dropExperience);
+        }
+
+        public ConfigBalance(boolean allowSpawnerAbsorption, boolean allowFakePlayers, int absorptionBonus, boolean allowBossSpawns, boolean countCageBornForShard, boolean countVanillaSpawnerBornForShard, boolean requireOwnerOnline, boolean requireRedstoneSignal, boolean allowShardCombination, int spawnCap, boolean dropExperience)
+        {
             this.allowSpawnerAbsorption = allowSpawnerAbsorption;
             this.allowFakePlayers = allowFakePlayers;
             this.absorptionBonus = absorptionBonus;
             this.allowBossSpawns = allowBossSpawns;
             this.countCageBornForShard = countCageBornForShard;
+            this.countVanillaSpawnerBornForShard = countVanillaSpawnerBornForShard;
             this.requireOwnerOnline = requireOwnerOnline;
             this.requireRedstoneSignal = requireRedstoneSignal;
             this.allowShardCombination = allowShardCombination;
@@ -113,6 +120,11 @@ public class ConfigSoulShards
         public boolean countCageBornForShard()
         {
             return countCageBornForShard;
+        }
+
+        public boolean countVanillaSpawnerBornForShard()
+        {
+            return countVanillaSpawnerBornForShard;
         }
 
         public boolean requireOwnerOnline()

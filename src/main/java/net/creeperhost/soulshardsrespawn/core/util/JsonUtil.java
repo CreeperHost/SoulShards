@@ -2,6 +2,9 @@ package net.creeperhost.soulshardsrespawn.core.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.FileUtils;
 
@@ -32,14 +35,73 @@ public class JsonUtil
     @Nonnull
     public static <T> T fromJson(@Nonnull TypeToken<T> token, @Nonnull File file, @Nonnull T def)
     {
-        T ret = fromJson(token, file);
-        if (ret == null)
+        if (!file.exists())
         {
             toJson(def, token, file);
-            ret = def;
+            return def;
         }
 
-        return ret;
+        try
+        {
+            JsonElement json;
+            try (FileReader reader = new FileReader(file))
+            {
+                json = JsonParser.parseReader(reader);
+            }
+
+            JsonElement defaults = GSON.toJsonTree(def, token.getType());
+            boolean changed = mergeMissingDefaults(json, defaults);
+            T ret = GSON.fromJson(json, token.getType());
+            if (ret == null)
+            {
+                toJson(def, token, file);
+                return def;
+            }
+
+            if (changed)
+            {
+                try
+                {
+                    try (FileWriter writer = new FileWriter(file))
+                    {
+                        GSON.toJson(json, writer);
+                    }
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            return ret;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        toJson(def, token, file);
+        return def;
+    }
+
+    private static boolean mergeMissingDefaults(JsonElement target, JsonElement defaults)
+    {
+        if (!target.isJsonObject() || !defaults.isJsonObject()) return false;
+
+        boolean changed = false;
+        JsonObject targetObject = target.getAsJsonObject();
+        for (var entry : defaults.getAsJsonObject().entrySet())
+        {
+            JsonElement current = targetObject.get(entry.getKey());
+            if (current == null || current.isJsonNull())
+            {
+                targetObject.add(entry.getKey(), entry.getValue().deepCopy());
+                changed = true;
+            }
+            else
+            {
+                changed |= mergeMissingDefaults(current, entry.getValue());
+            }
+        }
+        return changed;
     }
 
     /**

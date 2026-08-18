@@ -15,11 +15,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.minecart.MinecartSpawner;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.entity.TrialSpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -27,6 +31,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -37,6 +42,24 @@ import java.util.Set;
 @EventBusSubscriber(modid = SoulShards.MODID)
 public class EventHandler
 {
+    private static final String VANILLA_SPAWNER_BORN = "soulshards:vanilla_spawner_born";
+
+    @SubscribeEvent
+    public static void onFinalizeSpawn(FinalizeSpawnEvent event)
+    {
+        if (!EntitySpawnReason.isSpawner(event.getSpawnType())) return;
+
+        var spawner = event.getSpawner();
+        if (spawner == null) return;
+
+        boolean vanillaSpawner = spawner.map(
+                blockEntity -> blockEntity instanceof SpawnerBlockEntity || blockEntity instanceof TrialSpawnerBlockEntity,
+                entity -> entity instanceof MinecartSpawner
+        );
+        if (vanillaSpawner)
+            event.getEntity().getSelfAndPassengers().forEach(entity -> entity.getPersistentData().putBoolean(VANILLA_SPAWNER_BORN, true));
+    }
+
     @SubscribeEvent
     public static void onEntityKill(LivingDeathEvent event)
     {
@@ -50,7 +73,11 @@ public class EventHandler
 
         if (!SoulShards.CONFIG.getBalance().allowBossSpawns() && event.getEntity().is(Tags.EntityTypes.BOSSES)) return;
 
-        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && event.getEntity().getPersistentData().getBooleanOr("cageBorn", false))
+        boolean cageBorn = event.getEntity().getPersistentData().getBooleanOr("cageBorn", false);
+        if (!SoulShards.CONFIG.getBalance().countCageBornForShard() && cageBorn)
+            return;
+
+        if (!cageBorn && !SoulShards.CONFIG.getBalance().countVanillaSpawnerBornForShard() && event.getEntity().getPersistentData().getBooleanOr(VANILLA_SPAWNER_BORN, false))
             return;
 
         if (event.getSource().getEntity() instanceof Player player)
