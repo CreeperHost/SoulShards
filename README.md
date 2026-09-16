@@ -7,7 +7,7 @@ Ever wanted to create your own mob spawners? Now you can!
 
 ## Links
 
-* [Maven](http://tehnut.info/maven/info/tehnut/soulshardsrespawn/SoulShardsRespawn/)
+* [Maven](https://maven.creeperhost.net/release)
 
 ## Information
 
@@ -17,40 +17,21 @@ This version of the mod is based on the sources of [Soul Shards: Reborn by Moze_
 
 This version is a near direct clone of the original mod.
 
-For more information, you can see the [Wiki](https://github.com/TehNut/Soul-Shards-Respawn/wiki). Information about modifying the `tiers.json` config can be found there.
-
-## Development Setup
-
-1. Fork this project to your own Github repository and clone it to your desktop.
-2. Follow [the steps listed](http://mcforge.readthedocs.io/en/latest/gettingstarted/#from-zero-to-modding) in the Forge docs for your chosen IDE.
-
 ## Developing Addons
 
 Add to your `build.gradle`:
 
     repositories {
       maven {
-        url "http://tehnut.info/maven/"
+        url "https://maven.creeperhost.net/release"
       }
     }
     
     dependencies {
-      deobfCompile "info.tehnut.soulshardsrespawn:SoulShardsRespawn:${ssr_version}"
+      implementation "net.creeperhost.soulshards:soulshards-neoforge:${ssr_version}"
     }
-`${ssr_version}` can be found on CurseForge (or via the Maven itself), check the file name of the version you want.
+`${ssr_version}` is the full Maven version, including the Minecraft version, for example `26.3-1.3.17`.
 
 ## License
 
 Soul Shards Respawn is licensed under the [MIT](https://tldrlegal.com/license/mit-license) license.
-
-All of the art is property of [BBoldt](https://github.com/BBoldt/). The art is released into the public domain.
-
-## Custom Builds
-   
-**Custom builds are *unsupported*. If you have an issue while using an unofficial build, it is not guaranteed that you will get support.**
-   
-### How to make a custom build:
-   
-1. Clone directly from this repository to your desktop.
-2. Navigate to the directory you cloned to. Open a command window there and run `gradlew build`
-3. Once it completes, your new build will be found at `../build/libs/SoulShards-TOW-*.jar`. You can ignore the `api`, `sources`, and `javadoc` jars.

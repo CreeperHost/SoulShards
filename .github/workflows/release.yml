@@ -82,3 +82,13 @@ jobs:
           set -euo pipefail
           chmod +x ./gradlew
           ./gradlew clean build publishMods --no-daemon
+
+      - name: Publish to CreeperHost Maven
+        env:
+          CREEPERHOST_MAVEN_TOKEN: ${{ secrets.CREEPERHOST_MAVEN_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${CREEPERHOST_MAVEN_TOKEN}" ]; then
+            ./gradlew publishMavenJavaPublicationToCreeperHostRepository --no-daemon
+          fi
