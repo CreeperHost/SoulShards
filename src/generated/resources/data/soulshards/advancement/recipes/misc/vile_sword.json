@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "soulshards:vile_sword"
+        "recipes": "soulshards:vile_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

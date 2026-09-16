@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "soulshards:smelting/vile_dust_from_soul_soil"
+        "recipes": "soulshards:smelting/vile_dust_from_soul_soil"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

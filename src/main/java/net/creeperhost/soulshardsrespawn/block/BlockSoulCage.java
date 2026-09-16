@@ -5,6 +5,7 @@ import net.creeperhost.soulshardsrespawn.core.data.Tier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +69,7 @@ public class BlockSoulCage extends Block implements EntityBlock
         ItemStack stack = cage.getInventory().extractItem(0, 1, false);
         if (stack.isEmpty()) return InteractionResult.PASS;
 
-        player.getInventory().placeItemBackInInventory(stack);
+        player.getInventory().placeItemBackInInventory(stack, Prediction.PREDICTED);
         return InteractionResult.SUCCESS;
     }
 
@@ -94,7 +95,7 @@ public class BlockSoulCage extends Block implements EntityBlock
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side)
+    public boolean shouldRedstoneWireConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side)
     {
         return true;
     }

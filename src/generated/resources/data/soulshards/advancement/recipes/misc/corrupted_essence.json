@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "soulshards:corrupted_essence"
+        "recipes": "soulshards:corrupted_essence"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "soulshards:soul_shard"
+        "recipes": "soulshards:soul_shard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

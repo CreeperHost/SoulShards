@@ -2,27 +2,42 @@ package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.MultiRegistryBootstrap;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 
 public class GeneratorRecipes extends RecipeProvider
 {
-    public GeneratorRecipes(HolderLookup.Provider provider, RecipeOutput output) {
-        super(provider, output);
+    public GeneratorRecipes(BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
+        super(recipes, advancements);
+    }
+
+    public static MultiRegistryBootstrap bootstrap() {
+        return new MultiRegistryBootstrap() {
+            @Override
+            public Set<ResourceKey<? extends Registry<?>>> requestedRegistries() {
+                return Set.of(Registries.RECIPE, Registries.ADVANCEMENT);
+            }
+
+            @Override
+            public void run(BootstrapGetter registries) {
+                new GeneratorRecipes(registries.get(Registries.RECIPE), registries.get(Registries.ADVANCEMENT)).buildRecipes();
+            }
+        };
     }
 
     @Override
@@ -86,19 +101,4 @@ public class GeneratorRecipes extends RecipeProvider
                 .save(this.output, rskey);
     }
 
-    public static class Runner extends RecipeProvider.Runner {
-        public Runner(PackOutput p_365442_, CompletableFuture<HolderLookup.Provider> p_362168_) {
-            super(p_365442_, p_362168_);
-        }
-
-        @Override
-        protected RecipeProvider createRecipeProvider(HolderLookup.Provider p_364945_, RecipeOutput p_362956_) {
-            return new GeneratorRecipes(p_364945_, p_362956_);
-        }
-
-        @Override
-        public String getName() {
-            return "Soul Shards Recipes";
-        }
-    }
 }

@@ -1,7 +1,7 @@
 package net.creeperhost.soulshardsrespawn.datagen;
 
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -12,9 +12,9 @@ import java.util.List;
 
 public class GeneratorBlockLoot extends VanillaBlockLoot
 {
-    public GeneratorBlockLoot(HolderLookup.Provider provider)
+    public GeneratorBlockLoot(LootTableSubProvider.Context context)
     {
-        super(provider);
+        super(context);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class GeneratorBlockLoot extends VanillaBlockLoot
     }
 
     @Override
-    protected @NotNull Iterable<Block> getKnownBlocks() {
+    public @NotNull Iterable<Block> getKnownBlocks() {
         List<Block> knownBlocks = new ArrayList<>();
         knownBlocks.addAll(RegistrarSoulShards.BLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
         return knownBlocks;

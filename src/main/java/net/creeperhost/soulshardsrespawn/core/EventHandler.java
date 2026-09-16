@@ -14,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
@@ -122,7 +123,7 @@ public class EventHandler
 
             soulShard.updateBinding(shardItem, binding.addKills(gainSouls.getAmount()));
             if (newItem) // Give the player the peeled off stack
-                player.getInventory().placeItemBackInInventory(shardItem);
+                player.getInventory().placeItemBackInInventory(shardItem, Prediction.SERVER_ONLY);
         }
     }
 
@@ -151,7 +152,7 @@ public class EventHandler
         }
 
         held.shrink(1);
-        event.getEntity().getInventory().placeItemBackInInventory(new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()));
+        event.getEntity().getInventory().placeItemBackInInventory(new ItemStack(RegistrarSoulShards.SOUL_SHARD.get()), Prediction.PREDICTED);
     }
 
     @SubscribeEvent

@@ -3,7 +3,7 @@ name: Publish release
 on:
   push:
     tags:
-      - '26.2-*'
+      - '26.3-*'
 
 permissions:
   contents: write
@@ -31,7 +31,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected="26.2-$(sed -n 's/^mod_version=//p' gradle.properties)"
+          expected="26.3-$(sed -n 's/^mod_version=//p' gradle.properties)"
           test "${GITHUB_REF_NAME}" = "${expected}"
           test -n "${CURSEFORGE_PROJECT_ID}"
           test -n "${MODRINTH_PROJECT_ID}"

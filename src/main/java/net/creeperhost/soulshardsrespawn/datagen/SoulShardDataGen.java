@@ -3,6 +3,8 @@ package net.creeperhost.soulshardsrespawn.datagen;
 import net.creeperhost.soulshardsrespawn.SoulShards;
 import net.creeperhost.soulshardsrespawn.core.RegistrarSoulShards;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -20,13 +22,15 @@ public class SoulShardDataGen
 {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
-        registerProviders(event.getGenerator(), event.getLookupProvider());
+        event.createReloadableRegistryObjects(new RegistrySetBuilder()
+                .add(GeneratorRecipes.bootstrap())
+                .add(Registries.LOOT_TABLE, new LootTableProvider(Collections.emptySet(),
+                        List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)))));
+        registerProviders(event.getGenerator(), event.getReloadableLookupProvider());
     }
 
     public static void registerProviders(DataGenerator generator, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
-        generator.addProvider(true, new GeneratorRecipes.Runner(generator.getPackOutput(), lookupProvider));
-
         GeneratorBlockTags blockTags = new GeneratorBlockTags(generator.getPackOutput(), lookupProvider, SoulShards.MODID);
         generator.addProvider(true, blockTags);
 
@@ -37,9 +41,6 @@ public class SoulShardDataGen
 //        generator.addProvider(true, new GeneratorEnchantmentTags(generator.getPackOutput(), lookupProvider, SoulShards.MODID));
 
         generator.addProvider(true, new GeneratorEntityTags(generator.getPackOutput(), lookupProvider));
-        generator.addProvider(true, new LootTableProvider(generator.getPackOutput(), Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(GeneratorBlockLoot::new, LootContextParamSets.BLOCK)), lookupProvider));
-
         generator.addProvider(true, new GeneratorLanguage(generator));
         // Item models are maintained in src/main/resources because this provider also enumerates vanilla registrations.
 //        generator.addProvider(true, new GeneratorModels(generator.getPackOutput()));
