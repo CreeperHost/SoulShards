@@ -30,7 +30,7 @@ Add to your `build.gradle`:
     dependencies {
       implementation "net.creeperhost.soulshards:soulshards-neoforge:${ssr_version}"
     }
-`${ssr_version}` is the full Maven version, including the Minecraft version, for example `26.3-1.3.17`.
+`${ssr_version}` is the full Maven version, including the Minecraft version, for example `26.3-1.3.18`.
 
 ## License
 

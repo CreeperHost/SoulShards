@@ -23,8 +23,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.SpawnerBlock;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -86,13 +86,17 @@ public class ItemSoulShard extends Item implements ISoulShard, IDamageBarHelper
             TileEntitySoulCage cage = (TileEntitySoulCage) context.getLevel().getBlockEntity(context.getClickedPos());
             if (cage == null) return InteractionResult.PASS;
 
-            IItemHandler itemHandler = cage.getInventory();
-            if (itemHandler != null && itemHandler.getStackInSlot(0).isEmpty())
+            var inventory = cage.getInventory();
+            if (inventory.getAmountAsInt(0) == 0)
             {
-                ItemHandlerHelper.insertItem(itemHandler, stack.copy(), false);
-                cage.setChanged();//markDirty();
+                int inserted;
+                try (var transaction = Transaction.openRoot()) {
+                    inserted = inventory.insert(0, ItemResource.of(stack), 1, transaction);
+                    if (inserted == 0) return InteractionResult.PASS;
+                    transaction.commit();
+                }
+                stack.shrink(inserted);
                 cage.setActive(true);
-                context.getPlayer().setItemInHand(context.getHand(), ItemStack.EMPTY);
                 return InteractionResult.SUCCESS;
             }
         }

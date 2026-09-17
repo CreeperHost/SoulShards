@@ -13,18 +13,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntitySoulCage extends BlockEntity {
-    private ItemStackHandler inventory;
+    private final SoulCageInventory inventory;
     private boolean active = false;
     public int spawnDelay = -1;
 
@@ -35,10 +36,11 @@ public class TileEntitySoulCage extends BlockEntity {
         super(RegistrarSoulShards.SOUL_CAGE_TE.get(), blockPos, blockState);
         this.inventory = new SoulCageInventory() {
             @Override
-            protected void onContentsChanged(int slot) {
+            protected void onContentsChanged(int slot, ItemStack previousContents) {
+                updateBinding();
                 setChanged();
                 syncToClient();
-                super.onContentsChanged(slot);
+                super.onContentsChanged(slot, previousContents);
             }
         };
     }
@@ -142,7 +144,7 @@ public class TileEntitySoulCage extends BlockEntity {
         }
     }
 
-    public ItemStackHandler getInventory() {
+    public SoulCageInventory getInventory() {
         return inventory;
     }
 
@@ -163,21 +165,43 @@ public class TileEntitySoulCage extends BlockEntity {
         return binding != null && binding.getOwner() != null && level.getServer().getPlayerList().getPlayer(binding.getOwner()) != null;
     }
 
-    public static class SoulCageInventory extends ItemStackHandler {
+    public static class SoulCageInventory extends ItemStacksResourceHandler {
         public SoulCageInventory() {
             super(1);
         }
 
-        @Nonnull
         @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (!(stack.getItem() instanceof ItemSoulShard)) return stack;
+        public boolean isValid(int slot, ItemResource resource) {
+            if (!(resource.getItem() instanceof ItemSoulShard shard)) return false;
+            Binding binding = shard.getBinding(resource.toStack());
+            return binding != null && binding.getBoundEntity() != null;
+        }
 
-            Binding binding = ((ItemSoulShard) stack.getItem()).getBinding(stack);
-            if (binding == null || binding.getBoundEntity() == null)
-                return stack;
+        @Override
+        protected int getCapacity(int slot, ItemResource resource) {
+            return 1;
+        }
 
-            return super.insertItem(slot, stack, simulate);
+        public ItemStack getStackInSlot(int slot) {
+            return getResource(slot).toStack(getAmountAsInt(slot));
+        }
+
+        // Keep the existing save and update-packet format so installed shards survive upgrades.
+        @Override
+        public void serialize(ValueOutput output) {
+            var items = output.list("Items", ItemStackWithSlot.CODEC);
+            ItemStack stack = getStackInSlot(0);
+            if (!stack.isEmpty()) items.add(new ItemStackWithSlot(0, stack));
+            output.putInt("Size", 1);
+        }
+
+        @Override
+        public void deserialize(ValueInput input) {
+            NonNullList<ItemStack> loaded = NonNullList.withSize(1, ItemStack.EMPTY);
+            input.listOrEmpty("Items", ItemStackWithSlot.CODEC).forEach(slot -> {
+                if (slot.isValidInContainer(1)) loaded.set(slot.slot(), slot.stack());
+            });
+            setStacks(loaded);
         }
     }
 }

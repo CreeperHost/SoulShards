@@ -5,7 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## 1.3.18
+
 ### Changes
+- Added the mod icon using NeoForge's current mods-screen metadata.
+- Updated to NeoForge 26.3.0.3-beta and migrated Soul Cage inventories to the transfer API while preserving existing saved shards.
+- Updated PolyLib to 2.0.15 for compatibility with NeoForge's updated events.
 - Ported Soul Shards to Minecraft 26.3 and NeoForge 26.3.
 - Updated PolyLib, JEI, Jade, and the NeoForge build plugin for Minecraft 26.3.
 - Migrated recipe and loot generation to the reloadable registry system.

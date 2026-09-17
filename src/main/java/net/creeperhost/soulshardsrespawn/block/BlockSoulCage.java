@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nullable;
 
@@ -66,8 +67,17 @@ public class BlockSoulCage extends Block implements EntityBlock
         TileEntitySoulCage cage = (TileEntitySoulCage) world.getBlockEntity(pos);
         if (cage == null) return InteractionResult.PASS;
 
-        ItemStack stack = cage.getInventory().extractItem(0, 1, false);
-        if (stack.isEmpty()) return InteractionResult.PASS;
+        var inventory = cage.getInventory();
+        var resource = inventory.getResource(0);
+        if (resource.isEmpty()) return InteractionResult.PASS;
+
+        ItemStack stack;
+        try (var transaction = Transaction.openRoot()) {
+            int extracted = inventory.extract(0, resource, 1, transaction);
+            if (extracted == 0) return InteractionResult.PASS;
+            stack = resource.toStack(extracted);
+            transaction.commit();
+        }
 
         player.getInventory().placeItemBackInInventory(stack, Prediction.PREDICTED);
         return InteractionResult.SUCCESS;
